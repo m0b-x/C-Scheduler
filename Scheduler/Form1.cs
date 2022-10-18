@@ -2,6 +2,7 @@ namespace Scheduler
 {
     public partial class SchedulerForm : Form
     {
+        Scheduler scheduler = new Scheduler();
         Color colorEnabled = System.Drawing.Color.Green;
         Color colorDisabled = System.Drawing.Color.Red;
 
@@ -28,7 +29,31 @@ namespace Scheduler
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            MovMerger movMerger = new MovMerger();
+            string r6 = "R6";
+            string r7 = "R7";
+            string r3 = "R3";
+            string r5 = "R5";
 
+            List<string> operanziMov = new(2);
+            operanziMov.Add(r6);
+            operanziMov.Add(r7);
+
+            List<string> operanziAdd = new(2);
+            operanziAdd.Add(r3);
+            operanziAdd.Add(r6);
+            operanziAdd.Add(r5);
+            Instructiune i1 = new Instructiune()
+            {
+                Nume = "Mov",
+                Operanzi = operanziMov
+            };
+            Instructiune i2 = new Instructiune()
+            {
+                Nume = "Add",
+                Operanzi = operanziAdd
+            };
+            movMerger.MovMerge(i1, i2);
         }
 
         private void labelMovMerging_Click(object sender, EventArgs e)

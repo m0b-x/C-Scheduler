@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Scheduler
 {
     public class Instructiune
     {
+        public static string SimbolValoareImediata = "#";
+
         private string numeInstructiune;
         private List<string> operanzi = new List<string>();
 
@@ -18,17 +16,17 @@ namespace Scheduler
         public string Nume
         {
             get { return numeInstructiune; }
-            set {  numeInstructiune = value; }
+            set { numeInstructiune = value; }
         }
         public List<string> Operanzi
         {
-            get { return operanzi; } 
+            get { return operanzi; }
             set { operanzi = value; }
         }
-        
+
         public bool EsteEticheta()
         {
-            if(operanzi.Count == 0)
+            if (operanzi.Count == 0)
             {
                 return true;
             }
@@ -36,6 +34,27 @@ namespace Scheduler
             {
                 return false;
             }
+        }
+
+        public static bool EsteOperandulValoareImediata(string operatorCaString)
+        {
+            if (operatorCaString[0].Equals(SimbolValoareImediata))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public static void Afiseaza(Instructiune i1)
+        {
+            Debug.Write(i1.Nume + " ");
+            foreach (var op in i1.Operanzi)
+            {
+                Debug.Write(op + " ");
+            }
+            Debug.WriteLine("");
         }
     }
 }
