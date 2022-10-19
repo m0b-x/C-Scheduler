@@ -53,7 +53,7 @@ namespace Scheduler
                 Nume = "Add",
                 Operanzi = operanziAdd
             };
-            movMerger.MovMerge(i1, i2);
+            movMerger.Merge(ref i1, ref i2);
         }
 
         private void labelMovMerging_Click(object sender, EventArgs e)

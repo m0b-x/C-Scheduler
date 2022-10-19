@@ -7,16 +7,12 @@ using System.Threading.Tasks;
 
 namespace Scheduler
 {
-    public class MovMerger
+    public class MovMerger : Merger
     {
-        bool IsMergerMoveCase()
-        {
-            return false;
-        }
 
         //prima instructiune mov:,a doua x
         //se presupune ca exista RAW intre ele
-        public bool MovMerge(Instructiune i1, Instructiune i2)
+        public bool Merge(ref Instructiune i1,ref Instructiune i2)
         {
             bool seSuprascrieOInstructiune = false;
 
@@ -195,6 +191,12 @@ namespace Scheduler
                     }
             }
             return seSuprascrieOInstructiune;
+        }
+
+        public bool IsMergeCase(Instructiune i1, Instructiune i2)
+        {
+            return true;
+            throw new NotImplementedException();
         }
     }
 }

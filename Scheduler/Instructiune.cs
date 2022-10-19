@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace Scheduler
 {
@@ -46,6 +47,53 @@ namespace Scheduler
             {
                 return false;
             }
+        }
+        public static bool EsteDependintaRAW(Instructiune i1, Instructiune i2)
+        {
+            foreach(string operand in i1.operanzi)
+            {
+                if (EsteRegistru(operand) == false)
+                    return false;
+            }
+            foreach (string operand in i2.operanzi)
+            {
+                if (EsteRegistru(operand) == false)
+                    return false;
+            }
+
+            return false;
+        }
+
+        public static bool EsteRegistru(string operand)
+        {
+            if (operand.Length == 2)
+            {
+                if (operand[0].ToString().ToLower().Equals("r"))
+                {
+                    var isNumeric = int.TryParse(operand[1].ToString(), out _);
+                    if(isNumeric)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else if (operand.Length == 3)
+            {
+
+                if (operand[0].ToString().ToLower().Equals("r"))
+                {
+                    var isNumeric = int.TryParse(operand.Substring(operand.Length - 2), out _);
+                    if (isNumeric)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                return false;
+            }
+            return false;
         }
         public static void Afiseaza(Instructiune i1)
         {
