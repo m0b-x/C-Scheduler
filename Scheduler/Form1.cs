@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace Scheduler
 {
     public partial class SchedulerForm : Form
@@ -22,6 +24,9 @@ namespace Scheduler
         List<Instructiune> instructiuni = new List<Instructiune>();
 
         ParserInstructiuni parserInstructiuni = new ParserInstructiuni();
+        MovMerger movMerger = new();
+        MovReabsorber movReabsorber = new();
+        ImmediateMerger immediateMerger = new();
         public SchedulerForm()
         {
             InitializeComponent();
@@ -29,31 +34,7 @@ namespace Scheduler
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            MovMerger movMerger = new MovMerger();
-            string r6 = "R6";
-            string r7 = "R7";
-            string r3 = "R3";
-            string r5 = "R5";
 
-            List<string> operanziMov = new(2);
-            operanziMov.Add(r6);
-            operanziMov.Add(r7);
-
-            List<string> operanziAdd = new(2);
-            operanziAdd.Add(r3);
-            operanziAdd.Add(r6);
-            operanziAdd.Add(r5);
-            Instructiune i1 = new Instructiune()
-            {
-                Nume = "Mov",
-                Operanzi = operanziMov
-            };
-            Instructiune i2 = new Instructiune()
-            {
-                Nume = "Add",
-                Operanzi = operanziAdd
-            };
-            movMerger.Merge(ref i1, ref i2);
         }
 
         private void labelMovMerging_Click(object sender, EventArgs e)
@@ -125,6 +106,33 @@ namespace Scheduler
                         textIsLoaded = true;
                         loadedFileLabel.BackColor = colorEnabled;
                         loadedFileLabel.Text = fileIsLoadedString;
+
+                        parserInstructiuni.ParseazaInstructiuni(fileContent);
+                        int i = 0;
+
+                        while (i < parserInstructiuni.Instructiuni.Count()-1)
+                        {
+                            Instructiune.Afiseaza(parserInstructiuni.Instructiuni[i]);
+                            if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i+1]))
+                            {
+                                if(movMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
+                                {
+                                    Debug.WriteLine("MOVMERGE");
+                                }
+                                else
+                                    if (immediateMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
+                                {
+                                    Debug.WriteLine("IMMMERGER");
+                                }
+                                else
+                                    if (movReabsorber.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
+                                {
+                                    Debug.WriteLine("MOVREABSORBER");
+                                }
+                            }
+                                i ++;
+
+                        }
                     }
                 }
             }

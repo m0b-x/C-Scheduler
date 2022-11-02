@@ -32,27 +32,27 @@ namespace Scheduler
         public bool Merge(ref Instructiune i1,ref Instructiune i2)
         {
             bool seSuprascrieInstructiunea = false;
-            switch(i1.Nume)
+            switch(i1.Nume.ToLower())
             {
-                case "ADD" :
-                case "ADDV":
-                case "DADC":
+                case "add" :
+                case "addv":
+                case "dadc":
                     {
                         double result;
                         result = int.Parse(i1.Operanzi[1]) + int.Parse(i2.Operanzi[1]);
                         i2.Operanzi[2] = result.ToString();
                         break;
                     }
-                case "SUB":
-                case "SUBV":
-                case "SUBC":
+                case "sub":
+                case "subv":
+                case "subc":
                     {
                         double result;
                         result = int.Parse(i1.Operanzi[1]) - int.Parse(i2.Operanzi[1]);
                         i2.Operanzi[2] = result.ToString();
                         break;
                     }
-                case "BIC":
+                case "bic":
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
@@ -79,7 +79,7 @@ namespace Scheduler
                         i2.Operanzi[1] = operatorBinar.ToString();
                         break;
                     }
-                case "AND":
+                case "and":
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
@@ -100,7 +100,7 @@ namespace Scheduler
                         i2.Operanzi[1] = operatorBinar.ToString();
                         break;
                     }
-                case "OR":
+                case "or":
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
@@ -121,7 +121,7 @@ namespace Scheduler
                         i2.Operanzi[1] = operatorBinar.ToString();
                         break;
                     }
-                case "EOR":
+                case "eor":
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);

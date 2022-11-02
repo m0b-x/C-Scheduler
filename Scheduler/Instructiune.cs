@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Scheduler
 {
@@ -39,7 +41,8 @@ namespace Scheduler
 
         public static bool EsteOperandulValoareImediata(string operatorCaString)
         {
-            if (operatorCaString[0].Equals(SimbolValoareImediata))
+            if (operatorCaString[0].Equals(SimbolValoareImediata) ||
+            operatorCaString[1].Equals(SimbolValoareImediata))
             {
                 return true;
             }
@@ -48,23 +51,62 @@ namespace Scheduler
                 return false;
             }
         }
+        public static bool EsteOperandulCuOffsetRegistru(string operatorCaString)
+        {
+            var operatorFaraSpatii = operatorCaString.Trim();
+            if (operatorFaraSpatii.StartsWith("(") && operatorFaraSpatii.Any(x => !char.IsLetter(x)))
+                return true;
+            return false;
+        }
         public static bool EsteDependintaRAW(Instructiune i1, Instructiune i2)
         {
-            foreach(string operand in i1.operanzi)
+            string operandScrisI1 = i1.Operanzi[0].ToLower();
+
+            bool suntregistriiFaraOffset = true;
+            //al doilea operand
+            for (int i = 1; i < i2.operanzi.Count; i++)
             {
-                if (EsteRegistru(operand) == false)
-                    return false;
+                if (!EsteRegistruFaraOffset(i2.operanzi[i]) && !EsteOperandulValoareImediata(i2.operanzi[i]))
+                {
+                    suntregistriiFaraOffset = false;
+                }
             }
-            foreach (string operand in i2.operanzi)
+            if(suntregistriiFaraOffset == true)
             {
-                if (EsteRegistru(operand) == false)
-                    return false;
+                for (int i = 1; i < i2.operanzi.Count; i++)
+                {
+                    if(i2.operanzi[i].ToLower().Equals(operandScrisI1))
+                    {
+
+                        return true;
+                    }
+                }
+            }
+            else
+            {
+                for (int i = 1; i < i2.operanzi.Count; i++)
+                {
+                    if (EsteOperandulCuOffsetRegistru(i2.operanzi[i]))
+                    {
+                        string operandPrelucrat = i2.operanzi[i].ToLower().Trim();
+                        operandPrelucrat = Regex.Replace(operandPrelucrat, "[()]", "");
+                        var operanziDinOffset = operandPrelucrat.Split(",");
+                        if (operanziDinOffset[0].Equals(operandScrisI1))
+                        {
+                            return true;
+                        }
+                        if(operanziDinOffset[1].Equals(operandScrisI1))
+                        {
+                            return true;
+                        }
+                    }
+                }
             }
 
             return false;
         }
 
-        public static bool EsteRegistru(string operand)
+        public static bool EsteRegistruFaraOffset(string operand)
         {
             if (operand.Length == 2)
             {
@@ -97,10 +139,10 @@ namespace Scheduler
         }
         public static void Afiseaza(Instructiune i1)
         {
-            Debug.Write(i1.Nume + " ");
+            Debug.Write(i1.Nume + "");
             foreach (var op in i1.Operanzi)
             {
-                Debug.Write(op + " ");
+                Debug.Write(op + ",");
             }
             Debug.WriteLine("");
         }
