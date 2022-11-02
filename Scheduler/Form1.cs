@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 
 namespace Scheduler
@@ -109,28 +110,69 @@ namespace Scheduler
 
                         parserInstructiuni.ParseazaInstructiuni(fileContent);
                         int i = 0;
-
+                        List<Instructiune> instructiuniNoi = new();
                         while (i < parserInstructiuni.Instructiuni.Count()-1)
                         {
-                            Instructiune.Afiseaza(parserInstructiuni.Instructiuni[i]);
+                            if(parserInstructiuni.Instructiuni[i].EsteEticheta())
+                            {
+
+                                instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                i++;
+                                continue;
+                            }
                             if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i+1]))
                             {
                                 if(movMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
-                                    Debug.WriteLine("MOVMERGE");
+                                    Instructiune i1 = parserInstructiuni.Instructiuni[i];
+                                    Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    movMerger.Merge(ref i1,ref i2);
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
                                 }
                                 else
                                     if (immediateMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
-                                    Debug.WriteLine("IMMMERGER");
+                                    Instructiune i1 = parserInstructiuni.Instructiuni[i];
+                                    Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    immediateMerger.Merge(ref i1, ref i2);
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
                                 }
                                 else
                                     if (movReabsorber.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
-                                    Debug.WriteLine("MOVREABSORBER");
+                                    Instructiune i1 = parserInstructiuni.Instructiuni[i];
+                                    Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    movReabsorber.Merge(ref i1, ref i2);
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
                                 }
                             }
-                                i ++;
+                            else
+                            {
+                                instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
+                            }
+                            i+=2;
+
+                        }
+                        foreach (var instr in instructiuniNoi)
+                        {
+                            string stringInstr;
+                            if (instr.EsteEticheta())
+                                stringInstr = $"{instr.Nume} ";
+                            else
+                                stringInstr = $"\t{instr.Nume} ";
+
+                            foreach (var op in instr.Operanzi)
+                            {
+                                stringInstr += $"{op},";
+                                Debug.WriteLine("");
+                            }
+                            stringInstr = stringInstr.Remove(stringInstr.Length - 1);
+                            stringInstr = stringInstr + "\n";
+                            richBoxCodFinal.Text += stringInstr;
 
                         }
                     }

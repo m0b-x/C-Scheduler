@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 using static System.Windows.Forms.AxHost;
 
 namespace Scheduler
@@ -22,6 +23,7 @@ namespace Scheduler
         string marcajSfarsitComentariu = "*/";
         char simbolEticheta = ':';
         char simbolASCII = '.';
+        static char[] caractereSpatii = { ' ', '\t' };
 
         public List<Instructiune>Instructiuni
         {
@@ -37,23 +39,27 @@ namespace Scheduler
                 {
                     if (!EsteLiniaEticheta(linie) && !EsteDirectivaASCII(linie))
                     {
-                       var date = linie.Trim().Split(separatorInstructiuneOperator,2);
+                        string linieFaraSpatii = linie.Trim(caractereSpatii);
+                        var date = linieFaraSpatii.Split(separatorInstructiuneOperator,2);
                         Instructiune instructiune = new Instructiune()
                         {
                             Nume = date[0]
                         };
                         var operatori = date[1].Split(separatorOperatori);
-                        instructiune.Operanzi.AddRange(operatori);
+                        foreach(var op in operatori)
+                        {
+                            instructiune.Operanzi.Add(op.Trim());
+                        }
 
                         instructiuni.Add(instructiune);
                     }
                     else
                     {
-
-                        var date = linie.Split(separatorInstructiuneOperator);
+                        string linieFaraSpatii = linie.Trim(caractereSpatii);
+                        Debug.WriteLine(linieFaraSpatii);
                         Instructiune instructiune = new Instructiune()
                         {
-                            Nume = date[0]
+                            Nume = linieFaraSpatii
                         };
                     }
                 }

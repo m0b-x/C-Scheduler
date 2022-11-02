@@ -95,6 +95,7 @@ namespace Scheduler
                         {
                             return true;
                         }
+                        if(operanziDinOffset.Count()>1)
                         if(operanziDinOffset[1].Equals(operandScrisI1))
                         {
                             return true;
@@ -139,7 +140,7 @@ namespace Scheduler
         }
         public static void Afiseaza(Instructiune i1)
         {
-            Debug.Write(i1.Nume + "");
+            Debug.Write(i1.Nume + " ");
             foreach (var op in i1.Operanzi)
             {
                 Debug.Write(op + ",");
