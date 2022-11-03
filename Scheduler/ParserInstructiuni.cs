@@ -53,14 +53,14 @@ namespace Scheduler
 
                         instructiuni.Add(instructiune);
                     }
-                    else
+                    else if(EsteLiniaEticheta(linie) || EsteDirectivaASCII(linie))
                     {
                         string linieFaraSpatii = linie.Trim(caractereSpatii);
-                        Debug.WriteLine(linieFaraSpatii);
                         Instructiune instructiune = new Instructiune()
                         {
                             Nume = linieFaraSpatii
                         };
+                        instructiuni.Add(instructiune);
                     }
                 }
             }

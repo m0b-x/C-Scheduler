@@ -8,6 +8,7 @@ namespace Scheduler
     public class Instructiune
     {
         public static string SimbolValoareImediata = "#";
+        public static char SimbolEticheta = ':';
 
         private string numeInstructiune;
         private List<string> operanzi = new List<string>();
@@ -29,7 +30,7 @@ namespace Scheduler
 
         public bool EsteEticheta()
         {
-            if (operanzi.Count == 0)
+            if (operanzi.Count == 0 || Nume.Contains(SimbolEticheta))
             {
                 return true;
             }
