@@ -86,7 +86,7 @@ namespace Scheduler
             {
                 openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "Text Files (*.txt)|*.txt|Trace Files (*.trc)|*.trc|Ins Files (*.ins)|*.ins|All Files (*.*)|*.*";
-                openFileDialog.FilterIndex = 2;
+                openFileDialog.FilterIndex = 4;
                 openFileDialog.RestoreDirectory = true;
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
@@ -122,31 +122,55 @@ namespace Scheduler
                             }
                             if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i+1]))
                             {
-                                if(movMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
+                                if (movMergingIsEnabled &&
+                                    movMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    Debug.WriteLine("Mov Merge");
+                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i2);
+                                    Debug.WriteLine("=>");
                                     movMerger.Merge(ref i1,ref i2);
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
+                                    instructiuniNoi.Add(i1);
+                                    instructiuniNoi.Add(i2);
+                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i2);
+                                    Debug.WriteLine("");
                                 }
                                 else
-                                    if (immediateMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
+                                    if (immediateMergingIsEnabled &&
+                                    immediateMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
+                                    Debug.WriteLine("Immediate Merge");
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i2);
+                                    Debug.WriteLine("=>");
                                     immediateMerger.Merge(ref i1, ref i2);
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
+                                    instructiuniNoi.Add(i1);
+                                    instructiuniNoi.Add(i2);
+                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i2);
+                                    Debug.WriteLine("");
                                 }
                                 else
-                                    if (movReabsorber.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
+                                    if (movReabsorbtionIsEnabled &&
+                                    movReabsorber.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
+                                    Debug.WriteLine("Mov Reabsorber");
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i1);
+                                    Debug.WriteLine("=>");
                                     movReabsorber.Merge(ref i1, ref i2);
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
+                                    instructiuniNoi.Add(i1);
+                                    instructiuniNoi.Add(i2);
+                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i2);
+                                    Debug.WriteLine("");
                                 }
                             }
                             else
@@ -168,7 +192,6 @@ namespace Scheduler
                             foreach (var op in instr.Operanzi)
                             {
                                 stringInstr += $"{op},";
-                                Debug.WriteLine("");
                             }
                             stringInstr = stringInstr.Remove(stringInstr.Length - 1);
                             stringInstr = stringInstr + "\n";
@@ -180,10 +203,5 @@ namespace Scheduler
             }
         }
 
-        private void buttonOptimize_Click(object sender, EventArgs e)
-        {
-            parserInstructiuni.ParseazaInstructiuni(fileContent);
-            richBoxCodFinal.Text += fileContentRaw;
-        }
     }
 }

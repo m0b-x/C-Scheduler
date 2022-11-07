@@ -195,7 +195,11 @@ namespace Scheduler
 
         public bool IsMergeCase(Instructiune i1, Instructiune i2)
         {
-            return true;
+            if(i1.Nume.ToLower().Equals("mov"))
+            {
+                return true;
+            }
+            return false;
             throw new NotImplementedException();
         }
     }

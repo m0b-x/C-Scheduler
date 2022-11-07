@@ -7,12 +7,18 @@ namespace Scheduler
 {
     public class Instructiune
     {
+        public static int NrInstructiuni = 0;
         public static string SimbolValoareImediata = "#";
         public static char SimbolEticheta = ':';
 
         private string numeInstructiune;
+        private int nrInstructiune;
         private List<string> operanzi = new List<string>();
 
+        public int NrInstructiune
+        {
+            get { return nrInstructiune; }
+        }
         public int NumarOperanzi
         {
             get { return operanzi.Count; }
@@ -38,6 +44,11 @@ namespace Scheduler
             {
                 return false;
             }
+        }
+        public Instructiune()
+        {
+            nrInstructiune = NrInstructiuni;
+            NrInstructiuni++;
         }
 
         public static bool EsteOperandulValoareImediata(string operatorCaString)
@@ -67,7 +78,7 @@ namespace Scheduler
             //al doilea operand
             for (int i = 1; i < i2.operanzi.Count; i++)
             {
-                if (!EsteRegistruFaraOffset(i2.operanzi[i]) && !EsteOperandulValoareImediata(i2.operanzi[i]))
+                if (EsteRegistruFaraOffset(i2.operanzi[i]) && !EsteOperandulValoareImediata(i2.operanzi[i]))
                 {
                     suntregistriiFaraOffset = false;
                 }
@@ -110,43 +121,24 @@ namespace Scheduler
 
         public static bool EsteRegistruFaraOffset(string operand)
         {
-            if (operand.Length == 2)
+            if(operand.Contains(')') || operand.Contains('('))
             {
-                if (operand[0].ToString().ToLower().Equals("r"))
-                {
-                    var isNumeric = int.TryParse(operand[1].ToString(), out _);
-                    if(isNumeric)
-                    {
-                        return true;
-                    }
-                }
-            }
-            else if (operand.Length == 3)
-            {
-
-                if (operand[0].ToString().ToLower().Equals("r"))
-                {
-                    var isNumeric = int.TryParse(operand.Substring(operand.Length - 2), out _);
-                    if (isNumeric)
-                    {
-                        return true;
-                    }
-                }
+                return true;
             }
             else
             {
                 return false;
             }
-            return false;
         }
         public static void Afiseaza(Instructiune i1)
         {
-            Debug.Write(i1.Nume + " ");
+            string stringDeAfisat = i1.Nume + " ";
             foreach (var op in i1.Operanzi)
             {
-                Debug.Write(op + ",");
+                stringDeAfisat += op + ",";
             }
-            Debug.WriteLine("");
+            stringDeAfisat = stringDeAfisat.Remove(stringDeAfisat.Length - 1);
+            Debug.WriteLine(stringDeAfisat);
         }
     }
 }
