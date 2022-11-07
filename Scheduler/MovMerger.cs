@@ -33,6 +33,7 @@ namespace Scheduler
                             Nume = "Bra",
                             Operanzi = operanzi
                         };
+                        i2 = iNoua;
                         seSuprascrieOInstructiune = true;
                         return seSuprascrieOInstructiune;
                     }
@@ -65,21 +66,18 @@ namespace Scheduler
                         {
                             if (!Instructiune.EsteOperandulValoareImediata(i1.Operanzi[1]))
                             {
-                                Debug.WriteLine("Caz 1 Add");
-                                if (i2.Operanzi[1] == i1.Operanzi[0])
+                                if (i2.Operanzi[1].Equals(i1.Operanzi[0]))
                                 {
                                     i2.Operanzi[1] = i1.Operanzi[1];
                                 }
-                                if (i2.Operanzi[2] == i1.Operanzi[0])
+                                if (i2.Operanzi[2].Equals(i1.Operanzi[0]))
                                 {
                                     i2.Operanzi[2] = i1.Operanzi[1];
                                 }
-                                Instructiune.Afiseaza(i2);
                                 return seSuprascrieOInstructiune;
                             }
                             else
                             {
-                                Debug.WriteLine("Caz 2 Add");
                                 //MOV R6, #4
                                 //ADD R3, R6, #5
                                 //=>MOV R6, #4; MOV R3, #9
@@ -89,7 +87,7 @@ namespace Scheduler
 
                                     string operandDestinatie = i2.Operanzi[0];
 
-                                    List<string> operanziNoi = new List<string>(2);
+                                    List<string> operanziNoi = new List<string>();
                                     operanziNoi.Add(operandDestinatie);
                                     operanziNoi.Add(Instructiune.SimbolValoareImediata + suma);
 
@@ -98,7 +96,7 @@ namespace Scheduler
                                         Nume = i1.Nume,
                                         Operanzi = operanziNoi
                                     };
-                                    Instructiune.Afiseaza(i2Noua);
+                                    i2 = i2Noua;
                                     return seSuprascrieOInstructiune;
 
                                 }
@@ -107,7 +105,6 @@ namespace Scheduler
                                 //=>MOV R6, #4; MOV R3, #9
                                 else if (Instructiune.EsteOperandulValoareImediata(i2.Operanzi[1]))
                                 {
-                                    Debug.WriteLine("Caz 3 Add");
                                     int suma = int.Parse(i1.Operanzi[1].Remove(0, 1) + int.Parse(i2.Operanzi[1].Remove(0, 1)));
 
                                     string operandDestinatie = i2.Operanzi[0];
@@ -121,8 +118,12 @@ namespace Scheduler
                                         Nume = i1.Nume,
                                         Operanzi = operanziNoi
                                     };
-                                    Instructiune.Afiseaza(i2Noua);
+                                    i2 = i2Noua;
                                     return seSuprascrieOInstructiune;
+                                }
+                                else
+                                {
+                                    i2.Operanzi[1].Replace(i1.Operanzi[0], i1.Operanzi[1]);
                                 }
                             }
                             break;
@@ -130,26 +131,15 @@ namespace Scheduler
                     //MOV R3, #0
                     //ST (R1, R2), R3 /* instrucţiunea care se infiltrează */ Secvenţa modificată:
                     //=>MOV R3, #0; ST (R1, R2), R0
-                    case "store":
+                    //sau
+                    case "st":
                         {
-                            Debug.WriteLine("Caz Store");
-                            if (Instructiune.EsteOperandulValoareImediata(i1.Operanzi[1]))
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
-                                string operandDestinatie = i2.Operanzi[0];
-
-                                List<string> operanziNoi = new List<string>(2);
-                                operanziNoi.Add(operandDestinatie);
-                                operanziNoi.Add(i1.Operanzi[1]);
-
-                                Instructiune i2Noua = new Instructiune()
-                                {
-                                    Nume = i2.Nume,
-                                    Operanzi = operanziNoi
-                                };
-                                Instructiune.Afiseaza(i2Noua);
-                                return seSuprascrieOInstructiune;
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
                             }
-                            break;
+                            return seSuprascrieOInstructiune;
                         }
                     //MOV R4, #4
                     //GT B1, R4, R3 
@@ -174,7 +164,7 @@ namespace Scheduler
                                         Nume = "LTE",
                                         Operanzi = operanziNoi
                                     };
-                                    Instructiune.Afiseaza(instructiuneNoua);
+                                    i2 = instructiuneNoua;
                                     return seSuprascrieOInstructiune;
                                 }
                             }

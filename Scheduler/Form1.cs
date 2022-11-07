@@ -111,17 +111,19 @@ namespace Scheduler
                         parserInstructiuni.ParseazaInstructiuni(fileContent);
                         int i = 0;
                         List<Instructiune> instructiuniNoi = new();
+
                         while (i < parserInstructiuni.Instructiuni.Count()-1)
                         {
                             if(parserInstructiuni.Instructiuni[i].EsteEticheta())
                             {
 
                                 instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
-                                i++;
-                                continue;
+                                parserInstructiuni.Instructiuni.RemoveAt(i);
+                                i -= 2;
                             }
-                            if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i+1]))
+                            else if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i+1]))
                             {
+
                                 if (movMergingIsEnabled &&
                                     movMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
@@ -134,8 +136,11 @@ namespace Scheduler
                                     movMerger.Merge(ref i1,ref i2);
                                     instructiuniNoi.Add(i1);
                                     instructiuniNoi.Add(i2);
+                                    parserInstructiuni.Instructiuni[i] = i1;
+                                    parserInstructiuni.Instructiuni[i + 1] = i2;
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
+                                    Debug.WriteLine("");
                                     Debug.WriteLine("");
                                 }
                                 else
@@ -151,6 +156,8 @@ namespace Scheduler
                                     immediateMerger.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
                                     instructiuniNoi.Add(i2);
+                                    parserInstructiuni.Instructiuni[i] = i1;
+                                    parserInstructiuni.Instructiuni[i + 1] = i2;
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
@@ -163,11 +170,13 @@ namespace Scheduler
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
                                     Instructiune.Afiseaza(i1);
-                                    Instructiune.Afiseaza(i1);
+                                    Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("=>");
                                     movReabsorber.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
                                     instructiuniNoi.Add(i2);
+                                    parserInstructiuni.Instructiuni[i] = i1;
+                                    parserInstructiuni.Instructiuni[i + 1] = i2;
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
@@ -175,10 +184,11 @@ namespace Scheduler
                             }
                             else
                             {
-                                instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
-                                instructiuniNoi.Add(parserInstructiuni.Instructiuni[i + 1]);
+                                Instructiune i1 = parserInstructiuni.Instructiuni[i];
+                                Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
                             }
-                            i+=2;
+                            i++;
 
                         }
                         foreach (var instr in instructiuniNoi)
