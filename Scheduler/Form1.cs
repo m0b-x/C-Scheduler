@@ -113,6 +113,7 @@ namespace Scheduler
                         List<Instructiune> instructiuniNoi = new();
 
                         bool notMerged = true;
+                        List<int> liniiSchimbate = new();
                         while (i < parserInstructiuni.Instructiuni.Count()-1)
                         {
                             if(parserInstructiuni.Instructiuni[i].EsteEticheta())
@@ -142,6 +143,8 @@ namespace Scheduler
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    liniiSchimbate.Add(i);
+                                    liniiSchimbate.Add(i+1);
                                     notMerged = false;
                                 }
                                 else
@@ -162,6 +165,8 @@ namespace Scheduler
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    liniiSchimbate.Add(i);
+                                    liniiSchimbate.Add(i + 1);
                                     notMerged = false;
                                 }
                                 else
@@ -182,6 +187,8 @@ namespace Scheduler
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    liniiSchimbate.Add(i);
+                                    liniiSchimbate.Add(i + 1);
                                     notMerged = false;
                                 }
                             }
@@ -194,23 +201,46 @@ namespace Scheduler
                             notMerged = true;
 
                         }
+                        var textVechi = new System.Text.StringBuilder();
                         foreach (var instr in instructiuniNoi)
                         {
                             string stringInstr;
                             if (instr.EsteEticheta())
-                                stringInstr = $"{instr.Nume} ";
+                                stringInstr = $"{instr.Nume}";
                             else
-                                stringInstr = $"\t{instr.Nume} ";
+                                stringInstr = $"\t{instr.Nume}";
 
                             foreach (var op in instr.Operanzi)
                             {
                                 stringInstr += $"{op},";
                             }
                             stringInstr = stringInstr.Remove(stringInstr.Length - 1);
-                            stringInstr = stringInstr + "\n";
+                            stringInstr = stringInstr + Environment.NewLine;
                             richBoxCodFinal.Text += stringInstr;
-
                         }
+
+                        var textNou = new System.Text.StringBuilder();
+                        textNou.Append(@"{\rtf1\ansi");
+                        int index = 0;
+                        foreach (var linie in richBoxCodFinal.Lines)
+                        {
+                            if(liniiSchimbate.Contains(index))
+                            {
+                                var linieSchimbata = @"\b " + @linie + @"\b0";
+                                textNou.Append(linieSchimbata);
+                                textNou.AppendLine(@"\line");
+                            }
+                            else
+                            {
+                                textNou.Append(linie);
+                                textNou.AppendLine(@"\line");
+                            }
+                            index++;
+                        }
+                        textNou.Append("}");
+                        Debug.WriteLine("");
+                        Debug.WriteLine(textNou.ToString());
+                        richBoxCodFinal.Rtf = textNou.ToString();
                     }
                 }
             }
