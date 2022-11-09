@@ -17,7 +17,7 @@ namespace Scheduler
             //este RAW
 
             
-            if(i2.Nume.ToLower() == "mov")
+            if(i2.Nume.ToLower().Equals("mov"))
             {
                 if(i1.Nume.ToLower().Equals("ld") ||
                    i1.Nume.ToLower().Equals("st"))
@@ -39,6 +39,7 @@ namespace Scheduler
 
             List<string> operanziNoi = new(3);
             operanziNoi.AddRange(i1.Operanzi);
+            operanziNoi[0] = i2.Operanzi[0];
             Instructiune instructiuneNoua = new()
             {
                 Nume = i1.Nume,
