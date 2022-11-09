@@ -22,7 +22,9 @@ namespace Scheduler
                 //EQ B1, R0, R0
                 //BT B1, label /* instrucţiunea care se infiltrează */
                 //BRA label
-                if (i2.Nume.ToLower() == "bt")
+
+                //TODO:NU AI FACUTB
+                if (i2.Nume.ToLower().Equals("bt"))
                 {
                     if (i1.Operanzi[2].Equals(i1.Operanzi[3]))
                     {
@@ -43,6 +45,49 @@ namespace Scheduler
                 //=>EQ B3, R0, R0; ADD R10, R11, R12
                 else
                 {
+                    var operanziDinNume = i2.Nume.Split();
+                    List<string> operanziNoi = new();
+                    operanziNoi.AddRange(operanziDinNume);
+                    operanziNoi.RemoveAt(0);
+                    operanziNoi.AddRange(i2.Operanzi);
+
+                    Instructiune iNoua = new Instructiune()
+                    {
+                        Nume = operanziNoi[0]
+                    };
+                    operanziNoi.RemoveAt(0);
+                    iNoua.Operanzi = operanziNoi;
+                    i2 = iNoua;
+                    return seSuprascrieOInstructiune;
+                }
+            }
+            if (i1.Nume.ToLower().Equals("NE"))
+            {
+
+                //NE B1, R0, R0
+                //BT B1, label /* instrucţiunea care se infiltrează */
+                //BRA label
+                if (i2.Nume.ToLower().Equals("bt"))
+                {
+                    if (i1.Operanzi[2].Equals(i1.Operanzi[3]))
+                    {
+                        string label = i2.Operanzi[1];
+                        List<string> operanzi = new(1);
+                        Instructiune iNoua = new Instructiune()
+                        {
+                            Nume = "Bra",
+                            Operanzi = operanzi
+                        };
+                        i2 = iNoua;
+                        seSuprascrieOInstructiune = true;
+                        return seSuprascrieOInstructiune;
+                    }
+                }
+                //NE B3, R0, R0 /* B3 := true */
+                //TB3 ADD R10, R11, R12 /* instrucţiunea care se infiltrează */
+                //=>NE B3, R0, R0; ADD R10, R11, R12
+                else
+                {
                     i2.Nume = i2.Operanzi[0];
                     i2.Operanzi[0] = i2.Operanzi[1];
                     i2.Operanzi[1] = i2.Operanzi[2];
@@ -53,6 +98,15 @@ namespace Scheduler
             }
             else if (i1.Nume.ToLower().Equals("mov"))
             {
+                //MOV B1, B2
+                //TB1 LD R4, (R0, R6) /* instrucţiunea care se infiltrează */ Secvenţa combinată:
+                //MOV B1, B2; TB2 LD R4, (R0, R6)
+                if (i2.Nume.ToLower().Contains("tb"))
+                {
+                    StringBuilder numeNou = new(i2.Nume);
+                    numeNou[2] = i1.Operanzi[1][1];
+                    i2.Nume = numeNou.ToString();
+                }
                 switch (i2.Nume.ToLower())
                 {
                     //MOV R6, R7
@@ -146,34 +200,96 @@ namespace Scheduler
                     //=>MOV R4, #4; LTE B1 R3, #4
                     case "gt":
                         {
-                            if (Instructiune.EsteOperandulValoareImediata(i1.Operanzi[1]))
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
-                                if (i2.Operanzi[1].Equals(i1.Operanzi[0]))
-                                {
-                                    string operandDestinatie = i2.Operanzi[0];
-                                    string operandSursa1 = i2.Operanzi[2];
-                                    string operandSursa2 = i1.Operanzi[1];
-
-                                    List<string> operanziNoi = new(2);
-                                    operanziNoi.Add(operandDestinatie);
-                                    operanziNoi.Add(operandSursa1);
-                                    operanziNoi.Add(operandSursa2);
-
-                                    Instructiune instructiuneNoua = new Instructiune()
-                                    {
-                                        Nume = "LTE",
-                                        Operanzi = operanziNoi
-                                    };
-                                    i2 = instructiuneNoua;
-                                    return seSuprascrieOInstructiune;
-                                }
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
                             }
-                            break;
+                            i2.Nume = "LTE";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
                         }
-                        //MOV B1, B2
-                        //BT B1, label /* instrucţiunea care se infiltrează */
-                        //=>MOV B1, B2; BT B2, label
-                     case "bt":
+                    case "lt":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "GTE";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    case "lte":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "GT";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    case "gte":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "LT";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    case "gtu":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "LTU";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    case "gts":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "LTS";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    case "ltu":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "GTU";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    case "lts":
+                        {
+
+                            for (int i = 0; i < i2.Operanzi.Count; i++)
+                            {
+                                i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
+                            }
+                            i2.Nume = "GTS";
+                            (i2.Operanzi[1], i2.Operanzi[2]) = (i2.Operanzi[2], i2.Operanzi[1]);
+                            return seSuprascrieOInstructiune;
+                        }
+                    //MOV B1, B2
+                    //BT B1, label /* instrucţiunea care se infiltrează */
+                    //=>MOV B1, B2; BT B2, label
+                    case "bt":
                         {
                             i2.Operanzi[1] = i1.Operanzi[1];
                             return seSuprascrieOInstructiune;
@@ -187,6 +303,11 @@ namespace Scheduler
         {
             if(i1.Nume.ToLower().Equals("mov"))
             {
+                return true;
+            }
+            if (i1.Nume.ToLower().Equals("eq") || i1.Nume.ToLower().Equals("ne"))
+            {
+                if (i1.Operanzi[1].Equals(i1.Operanzi[2]))
                 return true;
             }
             return false;

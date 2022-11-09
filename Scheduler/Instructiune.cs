@@ -121,7 +121,15 @@ namespace Scheduler
                     }
                 }
             }
-
+            if (i1.Nume.ToLower().Equals("eq") || i1.Nume.ToLower().Equals("ne"))
+            {
+                if (("t" + i1.Operanzi[0].ToLower()).Equals(i2.Nume.ToLower()))
+                    return true;
+            }
+            if (("t" + i1.Operanzi[0].ToLower()).Equals(i2.Nume.ToLower()))
+            {
+                return true;
+            }
             return false;
         }
 

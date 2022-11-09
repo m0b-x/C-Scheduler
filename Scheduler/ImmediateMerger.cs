@@ -14,7 +14,7 @@ namespace Scheduler
         //de al doilea operand sursă
         public bool IsMergeCase(Instructiune i1, Instructiune i2)
         {
-            if (i1.Operanzi.Count == 2 && i2.Operanzi.Count == 2)
+            if (i1.Operanzi.Count == 3 && i2.Operanzi.Count == 3)
             {
                 if (Instructiune.EsteOperandulValoareImediata(i1.Operanzi[2])
                  && Instructiune.EsteOperandulValoareImediata(i2.Operanzi[2]))
@@ -34,13 +34,13 @@ namespace Scheduler
             bool seSuprascrieInstructiunea = false;
             switch(i1.Nume.ToLower())
             {
-                case "add" :
+                case "add":
                 case "addv":
-                case "dadc":
+                case "addc":
                     {
                         double result;
-                        result = int.Parse(i1.Operanzi[1]) + int.Parse(i2.Operanzi[1]);
-                        i2.Operanzi[2] = result.ToString();
+                        result = int.Parse(i1.Operanzi[2].Substring(1)) + int.Parse(i2.Operanzi[2].Substring(1));
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
                         break;
                     }
                 case "sub":
@@ -48,14 +48,28 @@ namespace Scheduler
                 case "subc":
                     {
                         double result;
-                        result = int.Parse(i1.Operanzi[1]) - int.Parse(i2.Operanzi[1]);
-                        i2.Operanzi[2] = result.ToString();
+                        result = int.Parse(i1.Operanzi[2].Substring(1)) - int.Parse(i2.Operanzi[2].Substring(1));
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
+                        break;
+                    }
+                case "mult":
+                    {
+                        double result;
+                        result = int.Parse(i1.Operanzi[2].Substring(1)) * int.Parse(i2.Operanzi[2].Substring(1));
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
+                        break;
+                    }
+                case "div":
+                    {
+                        double result;
+                        result = int.Parse(i1.Operanzi[2].Substring(1)) / int.Parse(i2.Operanzi[2].Substring(1));
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
                         break;
                     }
                 case "bic":
                     {
-                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
-                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
+                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
+                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
 
                         int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
@@ -76,13 +90,13 @@ namespace Scheduler
                         {
                             operatorBinar[i] = opBinarMaiMare[i];
                         }
-                        i2.Operanzi[1] = operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
                         break;
                     }
                 case "and":
                     {
-                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
-                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
+                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
+                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
                         int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
@@ -97,13 +111,13 @@ namespace Scheduler
                         {
                             operatorBinar[i] = opBinarMaiMare[i];
                         }
-                        i2.Operanzi[1] = operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
                         break;
                     }
                 case "or":
                     {
-                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
-                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
+                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
+                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
                         int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
@@ -118,13 +132,13 @@ namespace Scheduler
                         {
                             operatorBinar[i] = opBinarMaiMare[i];
                         }
-                        i2.Operanzi[1] = operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
                         break;
                     }
                 case "eor":
                     {
-                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[1]), 2);
-                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[1]), 2);
+                        string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
+                        string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
                         int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
                         string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
@@ -138,7 +152,7 @@ namespace Scheduler
                         {
                             operatorBinar[i] = opBinarMaiMare[i];
                         }
-                        i2.Operanzi[1] = operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
                         break;
                     }
             }

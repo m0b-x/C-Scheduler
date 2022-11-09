@@ -112,6 +112,7 @@ namespace Scheduler
                         int i = 0;
                         List<Instructiune> instructiuniNoi = new();
 
+                        bool notMerged = true;
                         while (i < parserInstructiuni.Instructiuni.Count()-1)
                         {
                             if(parserInstructiuni.Instructiuni[i].EsteEticheta())
@@ -135,13 +136,13 @@ namespace Scheduler
                                     Debug.WriteLine("=>");
                                     movMerger.Merge(ref i1,ref i2);
                                     instructiuniNoi.Add(i1);
-                                    instructiuniNoi.Add(i2);
+                                    //instructiuniNoi.Add(i2);
                                     parserInstructiuni.Instructiuni[i] = i1;
                                     parserInstructiuni.Instructiuni[i + 1] = i2;
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
-                                    Debug.WriteLine("");
+                                    notMerged = false;
                                 }
                                 else
                                     if (immediateMergingIsEnabled &&
@@ -155,12 +156,13 @@ namespace Scheduler
                                     Debug.WriteLine("=>");
                                     immediateMerger.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
-                                    instructiuniNoi.Add(i2);
+                                    //instructiuniNoi.Add(i2);
                                     parserInstructiuni.Instructiuni[i] = i1;
                                     parserInstructiuni.Instructiuni[i + 1] = i2;
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    notMerged = false;
                                 }
                                 else
                                     if (movReabsorbtionIsEnabled &&
@@ -174,21 +176,22 @@ namespace Scheduler
                                     Debug.WriteLine("=>");
                                     movReabsorber.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
-                                    instructiuniNoi.Add(i2);
+                                    //instructiuniNoi.Add(i2);
                                     parserInstructiuni.Instructiuni[i] = i1;
                                     parserInstructiuni.Instructiuni[i + 1] = i2;
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    notMerged = false;
                                 }
                             }
                             else
                             {
-                                Instructiune i1 = parserInstructiuni.Instructiuni[i];
-                                Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
-                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                    if(notMerged == true)
+                                        instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
                             }
                             i++;
+                            notMerged = true;
 
                         }
                         foreach (var instr in instructiuniNoi)

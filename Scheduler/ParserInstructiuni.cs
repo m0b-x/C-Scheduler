@@ -35,11 +35,12 @@ namespace Scheduler
         {
             foreach (string linie in fileContent)
             {
-                if (!linie.Equals(String.Empty) && linie.Any(x => !char.IsLetter(x)))
+                if (!String.IsNullOrWhiteSpace(linie) && linie.Any(x => !char.IsLetter(x)))
                 {
                     if (!EsteLiniaEticheta(linie) && !EsteDirectivaASCII(linie))
                     {
                         string linieFaraSpatii = linie.Trim(caractereSpatii);
+                        Debug.WriteLine(linieFaraSpatii);
                         var date = linieFaraSpatii.Split(separatorInstructiuneOperator,2);
                         Instructiune instructiune = new Instructiune()
                         {
