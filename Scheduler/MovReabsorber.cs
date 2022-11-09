@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Scheduler
+﻿namespace Scheduler
 {
     public class MovReabsorber : Merger
     {
@@ -16,10 +9,10 @@ namespace Scheduler
         {
             //este RAW
 
-            
-            if(i2.Nume.ToLower().Equals("mov"))
+
+            if (i2.Nume.ToLower().Equals("mov"))
             {
-                if(i1.Nume.ToLower().Equals("ld") ||
+                if (i1.Nume.ToLower().Equals("ld") ||
                    i1.Nume.ToLower().Equals("st"))
                 {
                     return false;
@@ -33,7 +26,7 @@ namespace Scheduler
         //MOV R6, R3 /* instrucţiunea care se infiltrează */
         //ADD R3, R4, R5;
         //=>ADD R6, R4, R5
-        public bool Merge(ref Instructiune i1,ref Instructiune i2)
+        public bool Merge(ref Instructiune i1, ref Instructiune i2)
         {
             bool seSuprascrieOInstructiune = true;
 

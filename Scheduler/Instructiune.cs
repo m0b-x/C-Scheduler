@@ -1,7 +1,5 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace Scheduler
 {
@@ -10,10 +8,11 @@ namespace Scheduler
         public static int NrInstructiuni = 0;
         public static string SimbolValoareImediata = "#";
         public static char SimbolEticheta = ':';
+        public static char SimbolASCII = '.';
 
         private string numeInstructiune;
         private int nrInstructiune;
-        private List<string> operanzi = new List<string>();
+        private List<string> operanzi = new();
 
         public int NrInstructiune
         {
@@ -34,9 +33,9 @@ namespace Scheduler
             set { operanzi = value; }
         }
 
-        public bool EsteEticheta()
+        public static bool EsteEticheta(Instructiune i)
         {
-            if (operanzi.Count == 0 || Nume.Contains(SimbolEticheta))
+            if (i.Nume.Contains(SimbolEticheta))
             {
                 return true;
             }
@@ -64,13 +63,26 @@ namespace Scheduler
         }
         public static bool EsteOperandulCuOffsetRegistrii(string operatorCaString)
         {
-            var operatorFaraSpatii = operatorCaString.Trim();
+            string operatorFaraSpatii = operatorCaString.Trim();
             if (operatorFaraSpatii.StartsWith("(") && operatorFaraSpatii.Any(x => !char.IsLetter(x)))
+            {
                 return true;
+            }
+
             return false;
         }
         public static bool EsteDependintaRAW(Instructiune i1, Instructiune i2)
         {
+            if (EsteEticheta(i1) || EsteEticheta(i2))
+            {
+                return false;
+            }
+
+            if (EsteDirectivaASCII(i1) || EsteDirectivaASCII(i2))
+            {
+                return false;
+            }
+
             string operandScrisI1 = i1.Operanzi[0].ToLower();
 
             bool suntRegistriiFaraOffset = true;
@@ -83,11 +95,11 @@ namespace Scheduler
                     break;
                 }
             }
-            if(suntRegistriiFaraOffset == true)
+            if (suntRegistriiFaraOffset == true)
             {
                 for (int i = 1; i < i2.operanzi.Count; i++)
                 {
-                    if(i2.operanzi[i].ToLower().Equals(operandScrisI1))
+                    if (i2.operanzi[i].ToLower().Equals(operandScrisI1))
                     {
                         return true;
                     }
@@ -101,15 +113,17 @@ namespace Scheduler
                     {
                         string operandPrelucrat = i2.operanzi[i].ToLower().Trim();
                         operandPrelucrat = Regex.Replace(operandPrelucrat, "[()]", "");
-                        var operanziDinOffset = operandPrelucrat.Split(",");
+                        string[] operanziDinOffset = operandPrelucrat.Split(",");
                         if (operanziDinOffset[0].Equals(operandScrisI1))
                         {
                             return true;
                         }
-                        if(operanziDinOffset.Count()>1)
-                        if(operanziDinOffset[1].Equals(operandScrisI1))
+                        if (operanziDinOffset.Count() > 1)
                         {
-                            return true;
+                            if (operanziDinOffset[1].Equals(operandScrisI1))
+                            {
+                                return true;
+                            }
                         }
                     }
                     else
@@ -124,7 +138,9 @@ namespace Scheduler
             if (i1.Nume.ToLower().Equals("eq") || i1.Nume.ToLower().Equals("ne"))
             {
                 if (("t" + i1.Operanzi[0].ToLower()).Equals(i2.Nume.ToLower()))
+                {
                     return true;
+                }
             }
             if (("t" + i1.Operanzi[0].ToLower()).Equals(i2.Nume.ToLower()))
             {
@@ -133,9 +149,21 @@ namespace Scheduler
             return false;
         }
 
+
+        public static bool EsteDirectivaASCII(Instructiune i1)
+        {
+            if (i1.Nume.Contains(SimbolASCII))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public static bool EsteRegistruCuOffset(string operand)
         {
-            if(operand.Contains(')') || operand.Contains('('))
+            if (operand.Contains(')') || operand.Contains('('))
             {
                 return true;
             }
@@ -147,7 +175,7 @@ namespace Scheduler
         public static void Afiseaza(Instructiune i1)
         {
             string stringDeAfisat = i1.Nume + " ";
-            foreach (var op in i1.Operanzi)
+            foreach (string op in i1.Operanzi)
             {
                 stringDeAfisat += op + ",";
             }

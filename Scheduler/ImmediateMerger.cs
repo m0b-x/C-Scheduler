@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Scheduler
 {
@@ -29,10 +25,10 @@ namespace Scheduler
         //SUB R3, R6, #3
         //ADD R4, R3, #1 /* instrucţiunea care se infiltrează */
         //SUB R3, R6, #3; ADD R4, R6, #-2
-        public bool Merge(ref Instructiune i1,ref Instructiune i2)
+        public bool Merge(ref Instructiune i1, ref Instructiune i2)
         {
             bool seSuprascrieInstructiunea = false;
-            switch(i1.Nume.ToLower())
+            switch (i1.Nume.ToLower())
             {
                 case "add":
                 case "addv":
@@ -78,12 +74,12 @@ namespace Scheduler
 
                         op2Complement2 = op2Complement2.Replace('0', '2').Replace('1', '0').Replace('2', '1');
                         StringBuilder operatorBinar = new(dimensiuneMare);
-                        
+
                         string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Complement2;
 
                         for (int i = 0; i < dimensiuneMica; i++)
                         {
-                            var newBit = (op1Binar[i] & op2Complement2[i]).ToString();
+                            string newBit = (op1Binar[i] & op2Complement2[i]).ToString();
                             operatorBinar[i] = newBit[0];
                         }
                         for (int i = dimensiuneMica - 1; i < dimensiuneMare; i++)
@@ -102,12 +98,12 @@ namespace Scheduler
                         string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
                         StringBuilder operatorBinar = new(dimensiuneMare);
 
-                        for(int i=0;i < dimensiuneMica; i++)
+                        for (int i = 0; i < dimensiuneMica; i++)
                         {
-                            var newBit = (op1Binar[i] & op2Binar[i]).ToString();
+                            string newBit = (op1Binar[i] & op2Binar[i]).ToString();
                             operatorBinar[i] = newBit[0];
                         }
-                        for(int i=dimensiuneMica-1;i<dimensiuneMare;i++)
+                        for (int i = dimensiuneMica - 1; i < dimensiuneMare; i++)
                         {
                             operatorBinar[i] = opBinarMaiMare[i];
                         }
@@ -125,7 +121,7 @@ namespace Scheduler
 
                         for (int i = 0; i < dimensiuneMica; i++)
                         {
-                            var newBit = (op1Binar[i] | op2Binar[i]).ToString();
+                            string newBit = (op1Binar[i] | op2Binar[i]).ToString();
                             operatorBinar[i] = newBit[0];
                         }
                         for (int i = dimensiuneMica - 1; i < dimensiuneMare; i++)

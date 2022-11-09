@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 
 namespace Scheduler
 {
@@ -12,7 +7,7 @@ namespace Scheduler
 
         //prima instructiune mov:,a doua x
         //se presupune ca exista RAW intre ele
-        public bool Merge(ref Instructiune i1,ref Instructiune i2)
+        public bool Merge(ref Instructiune i1, ref Instructiune i2)
         {
             bool seSuprascrieOInstructiune = false;
 
@@ -30,7 +25,7 @@ namespace Scheduler
                     {
                         string label = i2.Operanzi[1];
                         List<string> operanzi = new(1);
-                        Instructiune iNoua = new Instructiune()
+                        Instructiune iNoua = new()
                         {
                             Nume = "Bra",
                             Operanzi = operanzi
@@ -45,13 +40,13 @@ namespace Scheduler
                 //=>EQ B3, R0, R0; ADD R10, R11, R12
                 else
                 {
-                    var operanziDinNume = i2.Nume.Split();
+                    string[] operanziDinNume = i2.Nume.Split();
                     List<string> operanziNoi = new();
                     operanziNoi.AddRange(operanziDinNume);
                     operanziNoi.RemoveAt(0);
                     operanziNoi.AddRange(i2.Operanzi);
 
-                    Instructiune iNoua = new Instructiune()
+                    Instructiune iNoua = new()
                     {
                         Nume = operanziNoi[0]
                     };
@@ -73,7 +68,7 @@ namespace Scheduler
                     {
                         string label = i2.Operanzi[1];
                         List<string> operanzi = new(1);
-                        Instructiune iNoua = new Instructiune()
+                        Instructiune iNoua = new()
                         {
                             Nume = "Bra",
                             Operanzi = operanzi
@@ -141,11 +136,11 @@ namespace Scheduler
 
                                     string operandDestinatie = i2.Operanzi[0];
 
-                                    List<string> operanziNoi = new List<string>();
+                                    List<string> operanziNoi = new();
                                     operanziNoi.Add(operandDestinatie);
                                     operanziNoi.Add(Instructiune.SimbolValoareImediata + suma);
 
-                                    Instructiune i2Noua = new Instructiune()
+                                    Instructiune i2Noua = new()
                                     {
                                         Nume = i1.Nume,
                                         Operanzi = operanziNoi
@@ -163,11 +158,11 @@ namespace Scheduler
 
                                     string operandDestinatie = i2.Operanzi[0];
 
-                                    List<string> operanziNoi = new List<string>(2);
+                                    List<string> operanziNoi = new(2);
                                     operanziNoi.Add(operandDestinatie);
                                     operanziNoi.Add(Instructiune.SimbolValoareImediata + suma);
 
-                                    Instructiune i2Noua = new Instructiune()
+                                    Instructiune i2Noua = new()
                                     {
                                         Nume = i1.Nume,
                                         Operanzi = operanziNoi
@@ -294,21 +289,23 @@ namespace Scheduler
                             i2.Operanzi[1] = i1.Operanzi[1];
                             return seSuprascrieOInstructiune;
                         }
-                    }
+                }
             }
             return seSuprascrieOInstructiune;
         }
 
         public bool IsMergeCase(Instructiune i1, Instructiune i2)
         {
-            if(i1.Nume.ToLower().Equals("mov"))
+            if (i1.Nume.ToLower().Equals("mov"))
             {
                 return true;
             }
             if (i1.Nume.ToLower().Equals("eq") || i1.Nume.ToLower().Equals("ne"))
             {
                 if (i1.Operanzi[1].Equals(i1.Operanzi[2]))
-                return true;
+                {
+                    return true;
+                }
             }
             return false;
             throw new NotImplementedException();

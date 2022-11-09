@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
-using static System.Windows.Forms.AxHost;
+﻿using System.Text.RegularExpressions;
 
 namespace Scheduler
 {
     public class ParserInstructiuni
     {
 
-        List<Instructiune>instructiuni = new List<Instructiune>();
+        List<Instructiune> instructiuni = new();
 
         char separatorInstructiuneOperator = ' ';
         char separatorOperatori = ',';
@@ -25,7 +15,7 @@ namespace Scheduler
         char simbolASCII = '.';
         static char[] caractereSpatii = { ' ', '\t' };
 
-        public List<Instructiune>Instructiuni
+        public List<Instructiune> Instructiuni
         {
             get { return instructiuni; }
             set { instructiuni = value; }
@@ -40,28 +30,41 @@ namespace Scheduler
                     if (!EsteLiniaEticheta(linie) && !EsteDirectivaASCII(linie))
                     {
                         string linieFaraSpatii = linie.Trim(caractereSpatii);
-                        Debug.WriteLine(linieFaraSpatii);
-                        var date = linieFaraSpatii.Split(separatorInstructiuneOperator,2);
-                        Instructiune instructiune = new Instructiune()
+                        string[] date = linieFaraSpatii.Split(separatorInstructiuneOperator, 2);
+                        Instructiune instructiune = new()
                         {
                             Nume = date[0]
                         };
-                        var operatori = date[1].Split(separatorOperatori);
-                        foreach(var op in operatori)
+                        string[] operatori = date[1].Split(separatorOperatori);
+                        foreach (string op in operatori)
                         {
                             instructiune.Operanzi.Add(op.Trim());
                         }
 
                         instructiuni.Add(instructiune);
                     }
-                    else if(EsteLiniaEticheta(linie) || EsteDirectivaASCII(linie))
+                    else
                     {
-                        string linieFaraSpatii = linie.Trim(caractereSpatii);
-                        Instructiune instructiune = new Instructiune()
+                        if (EsteDirectivaASCII(linie))
                         {
-                            Nume = linieFaraSpatii
-                        };
-                        instructiuni.Add(instructiune);
+                            string linieFaraSpatii = linie.Trim(caractereSpatii);
+                            string[] date = linieFaraSpatii.Split(separatorInstructiuneOperator, 2);
+                            Instructiune instructiune = new()
+                            {
+                                Nume = date[0],
+                                Operanzi = new() { date[1] }
+                            };
+                            instructiuni.Add(instructiune);
+                        }
+                        else
+                        {
+                            string linieFaraSpatii = linie.Trim(caractereSpatii);
+                            Instructiune instructiune = new()
+                            {
+                                Nume = linieFaraSpatii
+                            };
+                            instructiuni.Add(instructiune);
+                        }
                     }
                 }
             }
@@ -90,7 +93,7 @@ namespace Scheduler
         }
         public static string StergeComentarile(string fileContentRaw)
         {
-            var re = @"(@(?:""[^""]*"")+|""(?:[^""\n\\]+|\\.)*""|'(?:[^'\n\\]+|\\.)*')|//.*|/\*(?s:.*?)\*/";
+            string re = @"(@(?:""[^""]*"")+|""(?:[^""\n\\]+|\\.)*""|'(?:[^'\n\\]+|\\.)*')|//.*|/\*(?s:.*?)\*/";
             return Regex.Replace(fileContentRaw, re, "$1");
         }
     }

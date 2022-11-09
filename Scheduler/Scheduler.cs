@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Scheduler
+﻿namespace Scheduler
 {
     internal class Scheduler
     {
-        MovMerger movMerger = new MovMerger();
-        ImmediateMerger immediateMerger = new ImmediateMerger();
-        MovReabsorber movReabsorber = new MovReabsorber();
+        MovMerger movMerger = new();
+        ImmediateMerger immediateMerger = new();
+        MovReabsorber movReabsorber = new();
 
         bool ShouldMovMerge = false;
         bool ShouldImmediateMerge = false;
@@ -23,7 +17,7 @@ namespace Scheduler
             ShouldMovReabsorb = movReabsorb;
         }
 
-        public void OptimizeCode(Instructiune [] instructions)
+        public void OptimizeCode(Instructiune[] instructions)
         {
 
         }

@@ -1,11 +1,8 @@
-using System;
-using System.Diagnostics;
-
 namespace Scheduler
 {
     public partial class SchedulerForm : Form
     {
-        Scheduler scheduler = new Scheduler();
+        Scheduler scheduler = new();
         Color colorEnabled = System.Drawing.Color.Green;
         Color colorDisabled = System.Drawing.Color.Red;
 
@@ -22,9 +19,9 @@ namespace Scheduler
         string filePath;
 
 
-        List<Instructiune> instructiuni = new List<Instructiune>();
+        List<Instructiune> instructiuni = new();
 
-        ParserInstructiuni parserInstructiuni = new ParserInstructiuni();
+        ParserInstructiuni parserInstructiuni = new();
         MovMerger movMerger = new();
         MovReabsorber movReabsorber = new();
         ImmediateMerger immediateMerger = new();
@@ -54,7 +51,7 @@ namespace Scheduler
 
         private void labelImmediateMerging_Click(object sender, EventArgs e)
         {
-            if(immediateMergingIsEnabled == false)
+            if (immediateMergingIsEnabled == false)
             {
                 labelImmediateMerging.BackColor = colorEnabled;
                 immediateMergingIsEnabled = true;
@@ -82,7 +79,7 @@ namespace Scheduler
 
         private void buttonLoadFile_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog openFileDialog = new OpenFileDialog())
+            using (OpenFileDialog openFileDialog = new())
             {
                 openFileDialog.InitialDirectory = "c:\\";
                 openFileDialog.Filter = "Text Files (*.txt)|*.txt|Trace Files (*.trc)|*.trc|Ins Files (*.ins)|*.ins|All Files (*.*)|*.*";
@@ -93,17 +90,17 @@ namespace Scheduler
                 {
                     filePath = openFileDialog.FileName;
 
-                    var fileStream = openFileDialog.OpenFile();
+                    Stream fileStream = openFileDialog.OpenFile();
 
-                    using (StreamReader reader = new StreamReader(fileStream))
+                    using (StreamReader reader = new(fileStream))
                     {
                         fileContentRaw = reader.ReadToEnd();
                         richBoxCodInitial.Text = fileContentRaw;
-                        
+
                         fileContentRaw = ParserInstructiuni.StergeComentarile(fileContentRaw);
-                        
+
                         fileContent = fileContentRaw.Split(separatori, StringSplitOptions.RemoveEmptyEntries);
-                        
+
                         textIsLoaded = true;
                         loadedFileLabel.BackColor = colorEnabled;
                         loadedFileLabel.Text = fileIsLoadedString;
@@ -112,105 +109,114 @@ namespace Scheduler
                         int i = 0;
                         List<Instructiune> instructiuniNoi = new();
 
-                        bool notMerged = true;
                         List<int> liniiSchimbate = new();
-                        while (i < parserInstructiuni.Instructiuni.Count()-1)
+                        while (i < parserInstructiuni.Instructiuni.Count() - 1)
                         {
-                            if(parserInstructiuni.Instructiuni[i].EsteEticheta())
+                            if (Instructiune.EsteEticheta(parserInstructiuni.Instructiuni[i]) ||
+                                Instructiune.EsteDirectivaASCII(parserInstructiuni.Instructiuni[i]))
                             {
 
                                 instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
-                                parserInstructiuni.Instructiuni.RemoveAt(i);
-                                i -= 2;
                             }
-                            else if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i+1]))
+                            else if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                             {
-
                                 if (movMergingIsEnabled &&
                                     movMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    /*
                                     Debug.WriteLine("Mov Merge");
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("=>");
-                                    movMerger.Merge(ref i1,ref i2);
+                                    */
+                                    movMerger.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
                                     //instructiuniNoi.Add(i2);
                                     parserInstructiuni.Instructiuni[i] = i1;
                                     parserInstructiuni.Instructiuni[i + 1] = i2;
+                                    /*
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    */
                                     liniiSchimbate.Add(i);
-                                    liniiSchimbate.Add(i+1);
-                                    notMerged = false;
+                                    liniiSchimbate.Add(i + 1);
+                                    i++;
                                 }
                                 else
                                     if (immediateMergingIsEnabled &&
                                     immediateMerger.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
-                                    Debug.WriteLine("Immediate Merge");
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    /*
+                                    Debug.WriteLine("Immediate Merge");
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("=>");
+                                    */
                                     immediateMerger.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
-                                    //instructiuniNoi.Add(i2);
                                     parserInstructiuni.Instructiuni[i] = i1;
                                     parserInstructiuni.Instructiuni[i + 1] = i2;
+                                    /*
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    */
                                     liniiSchimbate.Add(i);
                                     liniiSchimbate.Add(i + 1);
-                                    notMerged = false;
+                                    i++;
                                 }
                                 else
                                     if (movReabsorbtionIsEnabled &&
                                     movReabsorber.IsMergeCase(parserInstructiuni.Instructiuni[i], parserInstructiuni.Instructiuni[i + 1]))
                                 {
-                                    Debug.WriteLine("Mov Reabsorber");
                                     Instructiune i1 = parserInstructiuni.Instructiuni[i];
                                     Instructiune i2 = parserInstructiuni.Instructiuni[i + 1];
+                                    /*
+                                    Debug.WriteLine("Mov Reabsorber");
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("=>");
+                                    */
                                     movReabsorber.Merge(ref i1, ref i2);
                                     instructiuniNoi.Add(i1);
-                                    //instructiuniNoi.Add(i2);
                                     parserInstructiuni.Instructiuni[i] = i1;
                                     parserInstructiuni.Instructiuni[i + 1] = i2;
+                                    /*
                                     Instructiune.Afiseaza(i1);
                                     Instructiune.Afiseaza(i2);
                                     Debug.WriteLine("");
+                                    */
                                     liniiSchimbate.Add(i);
                                     liniiSchimbate.Add(i + 1);
-                                    notMerged = false;
+                                    i++;
                                 }
                             }
                             else
                             {
-                                    if(notMerged == true)
-                                        instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
+                                instructiuniNoi.Add(parserInstructiuni.Instructiuni[i]);
                             }
                             i++;
-                            notMerged = true;
 
                         }
-                        var textVechi = new System.Text.StringBuilder();
-                        foreach (var instr in instructiuniNoi)
+                        System.Text.StringBuilder textVechi = new();
+                        foreach (Instructiune instr in instructiuniNoi)
                         {
                             string stringInstr;
-                            if (instr.EsteEticheta())
-                                stringInstr = $"{instr.Nume}";
+                            if (Instructiune.EsteEticheta(instr) && !Instructiune.EsteDirectivaASCII(instr))
+                            {
+                                stringInstr = $"{instr.Nume} ";
+                            }
                             else
-                                stringInstr = $"\t{instr.Nume}";
+                            {
+                                stringInstr = $"\t{instr.Nume} ";
+                            }
 
-                            foreach (var op in instr.Operanzi)
+                            foreach (string op in instr.Operanzi)
                             {
                                 stringInstr += $"{op},";
                             }
@@ -219,27 +225,25 @@ namespace Scheduler
                             richBoxCodFinal.Text += stringInstr;
                         }
 
-                        var textNou = new System.Text.StringBuilder();
+                        System.Text.StringBuilder textNou = new();
                         textNou.Append(@"{\rtf1\ansi");
                         int index = 0;
-                        foreach (var linie in richBoxCodFinal.Lines)
+                        foreach (string? linie in richBoxCodFinal.Lines)
                         {
-                            if(liniiSchimbate.Contains(index))
+                            if (liniiSchimbate.Contains(index))
                             {
-                                var linieSchimbata = @"\b " + @linie + @"\b0";
-                                textNou.Append(linieSchimbata);
+                                string linieSchimbata = @"\b" + @linie + @"\b0";
+                                textNou.Append(@linieSchimbata);
                                 textNou.AppendLine(@"\line");
                             }
                             else
                             {
-                                textNou.Append(linie);
+                                textNou.Append(@linie);
                                 textNou.AppendLine(@"\line");
                             }
                             index++;
                         }
                         textNou.Append("}");
-                        Debug.WriteLine("");
-                        Debug.WriteLine(textNou.ToString());
                         richBoxCodFinal.Rtf = textNou.ToString();
                     }
                 }
