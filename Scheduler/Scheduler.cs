@@ -2,13 +2,13 @@
 {
     internal class Scheduler
     {
-        MovMerger movMerger = new();
-        ImmediateMerger immediateMerger = new();
-        MovReabsorber movReabsorber = new();
+        private MovMerger movMerger = new();
+        private ImmediateMerger immediateMerger = new();
+        private MovReabsorber movReabsorber = new();
 
-        bool ShouldMovMerge = false;
-        bool ShouldImmediateMerge = false;
-        bool ShouldMovReabsorb = false;
+        private bool ShouldMovMerge = false;
+        private bool ShouldImmediateMerge = false;
+        private bool ShouldMovReabsorb = false;
 
         public void SetParams(bool movMerge, bool immediateMerge, bool movReabsorb)
         {
@@ -19,8 +19,6 @@
 
         public void OptimizeCode(Instructiune[] instructions)
         {
-
         }
-
     }
 }

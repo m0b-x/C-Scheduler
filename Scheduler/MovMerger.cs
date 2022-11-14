@@ -4,7 +4,6 @@ namespace Scheduler
 {
     public class MovMerger : Merger
     {
-
         //prima instructiune mov:,a doua x
         //se presupune ca exista RAW intre ele
         public bool Merge(ref Instructiune i1, ref Instructiune i2)
@@ -13,7 +12,6 @@ namespace Scheduler
 
             if (i1.Nume.ToLower().Equals("eq"))
             {
-
                 //EQ B1, R0, R0
                 //BT B1, label /* instrucţiunea care se infiltrează */
                 //BRA label
@@ -58,7 +56,6 @@ namespace Scheduler
             }
             if (i1.Nume.ToLower().Equals("NE"))
             {
-
                 //NE B1, R0, R0
                 //BT B1, label /* instrucţiunea care se infiltrează */
                 //BRA label
@@ -147,7 +144,6 @@ namespace Scheduler
                                     };
                                     i2 = i2Noua;
                                     return seSuprascrieOInstructiune;
-
                                 }
                                 //MOV R6, #4
                                 //ADD R3, #5, R6
@@ -183,7 +179,6 @@ namespace Scheduler
                     //sau
                     case "st":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -191,11 +186,10 @@ namespace Scheduler
                             return seSuprascrieOInstructiune;
                         }
                     //MOV R4, #4
-                    //GT B1, R4, R3 
+                    //GT B1, R4, R3
                     //=>MOV R4, #4; LTE B1 R3, #4
                     case "gt":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -206,7 +200,6 @@ namespace Scheduler
                         }
                     case "lt":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -217,7 +210,6 @@ namespace Scheduler
                         }
                     case "lte":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -228,7 +220,6 @@ namespace Scheduler
                         }
                     case "gte":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -239,7 +230,6 @@ namespace Scheduler
                         }
                     case "gtu":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -250,7 +240,6 @@ namespace Scheduler
                         }
                     case "gts":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -261,7 +250,6 @@ namespace Scheduler
                         }
                     case "ltu":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -272,7 +260,6 @@ namespace Scheduler
                         }
                     case "lts":
                         {
-
                             for (int i = 0; i < i2.Operanzi.Count; i++)
                             {
                                 i2.Operanzi[i] = i2.Operanzi[i].Replace(i1.Operanzi[0], i1.Operanzi[1]);
@@ -294,7 +281,7 @@ namespace Scheduler
             return seSuprascrieOInstructiune;
         }
 
-        public bool IsMergeCase(Instructiune i1, Instructiune i2)
+        public bool EsteMergeCase(Instructiune i1, Instructiune i2)
         {
             if (i1.Nume.ToLower().Equals("mov"))
             {

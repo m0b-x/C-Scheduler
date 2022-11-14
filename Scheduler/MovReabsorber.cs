@@ -5,10 +5,9 @@
         //Această tehnică implică orice pereche de instrucţiuni
         //care au valori imediate pe post
         //de al doilea operand sursă
-        public bool IsMergeCase(Instructiune i1, Instructiune i2)
+        public bool EsteMergeCase(Instructiune i1, Instructiune i2)
         {
             //este RAW
-
 
             if (i2.Nume.ToLower().Equals("mov"))
             {
@@ -22,6 +21,7 @@
             return false;
             throw new NotImplementedException();
         }
+
         //ADD R3, R4, R5
         //MOV R6, R3 /* instrucţiunea care se infiltrează */
         //ADD R3, R4, R5;

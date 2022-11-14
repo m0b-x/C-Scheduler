@@ -4,17 +4,19 @@ namespace Scheduler
 {
     public class ImmediateMerger : Merger
     {
-
         //Această tehnică implică orice pereche de instrucţiuni
         //care au valori imediate pe post
         //de al doilea operand sursă
-        public bool IsMergeCase(Instructiune i1, Instructiune i2)
+        public bool EsteMergeCase(Instructiune i1, Instructiune i2)
         {
             if (i1.Operanzi.Count == 3 && i2.Operanzi.Count == 3)
             {
                 if (Instructiune.EsteOperandulValoareImediata(i1.Operanzi[2])
                  && Instructiune.EsteOperandulValoareImediata(i2.Operanzi[2]))
                 {
+                    Instructiune.Afiseaza(i1);
+                    Instructiune.Afiseaza(i2);
+
                     return true;
                 }
             }

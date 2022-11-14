@@ -1,19 +1,17 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace Scheduler
 {
     public class ParserInstructiuni
     {
+        private List<Instructiune> instructiuni = new();
 
-        List<Instructiune> instructiuni = new();
-
-        char separatorInstructiuneOperator = ' ';
-        char separatorOperatori = ',';
-        string marcajInceputComentariu = "/*";
-        string marcajSfarsitComentariu = "*/";
-        char simbolEticheta = ':';
-        char simbolASCII = '.';
-        static char[] caractereSpatii = { ' ', '\t' };
+        private char separatorInstructiuneOperator = ' ';
+        private char separatorOperatori = ',';
+        private char simbolEticheta = ':';
+        private char simbolASCII = '.';
+        private static char[] caractereSpatii = { ' ', '\t' };
 
         public List<Instructiune> Instructiuni
         {
@@ -40,7 +38,6 @@ namespace Scheduler
                         {
                             instructiune.Operanzi.Add(op.Trim());
                         }
-
                         instructiuni.Add(instructiune);
                     }
                     else
@@ -56,6 +53,7 @@ namespace Scheduler
                             };
                             instructiuni.Add(instructiune);
                         }
+                        //eticheta
                         else
                         {
                             string linieFaraSpatii = linie.Trim(caractereSpatii);
@@ -69,6 +67,7 @@ namespace Scheduler
                 }
             }
         }
+
         private bool EsteDirectivaASCII(string linie)
         {
             if (linie.Contains(simbolASCII))
@@ -80,6 +79,7 @@ namespace Scheduler
                 return false;
             }
         }
+
         private bool EsteLiniaEticheta(string linie)
         {
             if (linie.Contains(simbolEticheta))
@@ -91,6 +91,7 @@ namespace Scheduler
                 return false;
             }
         }
+
         public static string StergeComentarile(string fileContentRaw)
         {
             string re = @"(@(?:""[^""]*"")+|""(?:[^""\n\\]+|\\.)*""|'(?:[^'\n\\]+|\\.)*')|//.*|/\*(?s:.*?)\*/";

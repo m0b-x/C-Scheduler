@@ -34,8 +34,9 @@
             this.labelMovMerging = new System.Windows.Forms.Label();
             this.labelImmediateMerging = new System.Windows.Forms.Label();
             this.labelMovReabsorbtion = new System.Windows.Forms.Label();
-            this.buttonLoadFile = new System.Windows.Forms.Button();
-            this.loadedFileLabel = new System.Windows.Forms.Label();
+            this.buttonIncarcaFisier = new System.Windows.Forms.Button();
+            this.labelFisierIncarcat = new System.Windows.Forms.Label();
+            this.buttonRepornesteAplicatia = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // richBoxCodInitial
@@ -98,33 +99,45 @@
             this.labelMovReabsorbtion.Text = "Mov Reabsorbtion";
             this.labelMovReabsorbtion.Click += new System.EventHandler(this.labelMovReabsorbtion_Click);
             // 
-            // buttonLoadFile
+            // buttonIncarcaFisier
             // 
-            this.buttonLoadFile.Location = new System.Drawing.Point(12, 553);
-            this.buttonLoadFile.Name = "buttonLoadFile";
-            this.buttonLoadFile.Size = new System.Drawing.Size(110, 42);
-            this.buttonLoadFile.TabIndex = 7;
-            this.buttonLoadFile.Text = "Alege Fisierul";
-            this.buttonLoadFile.UseVisualStyleBackColor = true;
-            this.buttonLoadFile.Click += new System.EventHandler(this.buttonLoadFile_Click);
+            this.buttonIncarcaFisier.Location = new System.Drawing.Point(12, 553);
+            this.buttonIncarcaFisier.Name = "buttonIncarcaFisier";
+            this.buttonIncarcaFisier.Size = new System.Drawing.Size(110, 42);
+            this.buttonIncarcaFisier.TabIndex = 7;
+            this.buttonIncarcaFisier.Text = "Alege Fisierul";
+            this.buttonIncarcaFisier.UseVisualStyleBackColor = true;
+            this.buttonIncarcaFisier.Click += new System.EventHandler(this.buttonLoadFile_Click);
             // 
-            // loadedFileLabel
+            // labelFisierIncarcat
             // 
-            this.loadedFileLabel.BackColor = System.Drawing.Color.Red;
-            this.loadedFileLabel.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.loadedFileLabel.Location = new System.Drawing.Point(145, 562);
-            this.loadedFileLabel.Name = "loadedFileLabel";
-            this.loadedFileLabel.Size = new System.Drawing.Size(192, 27);
-            this.loadedFileLabel.TabIndex = 8;
-            this.loadedFileLabel.Text = "Fisierul nu este incarcat";
+            this.labelFisierIncarcat.AutoSize = true;
+            this.labelFisierIncarcat.BackColor = System.Drawing.Color.Red;
+            this.labelFisierIncarcat.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.labelFisierIncarcat.Location = new System.Drawing.Point(145, 562);
+            this.labelFisierIncarcat.Name = "labelFisierIncarcat";
+            this.labelFisierIncarcat.Size = new System.Drawing.Size(189, 21);
+            this.labelFisierIncarcat.TabIndex = 8;
+            this.labelFisierIncarcat.Text = "Fisierul nu este incarcat";
+            // 
+            // buttonRepornesteAplicatia
+            // 
+            this.buttonRepornesteAplicatia.Location = new System.Drawing.Point(429, 553);
+            this.buttonRepornesteAplicatia.Name = "buttonRepornesteAplicatia";
+            this.buttonRepornesteAplicatia.Size = new System.Drawing.Size(126, 34);
+            this.buttonRepornesteAplicatia.TabIndex = 9;
+            this.buttonRepornesteAplicatia.Text = "Reporneste app.";
+            this.buttonRepornesteAplicatia.UseVisualStyleBackColor = true;
+            this.buttonRepornesteAplicatia.Click += new System.EventHandler(this.buttonRepornesteAplicatia_Click);
             // 
             // SchedulerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(991, 597);
-            this.Controls.Add(this.loadedFileLabel);
-            this.Controls.Add(this.buttonLoadFile);
+            this.Controls.Add(this.buttonRepornesteAplicatia);
+            this.Controls.Add(this.labelFisierIncarcat);
+            this.Controls.Add(this.buttonIncarcaFisier);
             this.Controls.Add(this.labelMovReabsorbtion);
             this.Controls.Add(this.labelImmediateMerging);
             this.Controls.Add(this.labelMovMerging);
@@ -135,6 +148,7 @@
             this.Text = "Scheduler";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -146,7 +160,8 @@
         private Label labelMovMerging;
         private Label labelImmediateMerging;
         private Label labelMovReabsorbtion;
-        private Button buttonLoadFile;
-        private Label loadedFileLabel;
+        private Button buttonIncarcaFisier;
+        private Label labelFisierIncarcat;
+        private Button buttonRepornesteAplicatia;
     }
 }

@@ -5,28 +5,24 @@ namespace Scheduler
 {
     public class Instructiune
     {
-        public static int NrInstructiuni = 0;
         public static string SimbolValoareImediata = "#";
         public static char SimbolEticheta = ':';
         public static char SimbolASCII = '.';
 
         private string numeInstructiune;
-        private int nrInstructiune;
         private List<string> operanzi = new();
 
-        public int NrInstructiune
-        {
-            get { return nrInstructiune; }
-        }
         public int NumarOperanzi
         {
             get { return operanzi.Count; }
         }
+
         public string Nume
         {
             get { return numeInstructiune; }
             set { numeInstructiune = value; }
         }
+
         public List<string> Operanzi
         {
             get { return operanzi; }
@@ -44,10 +40,9 @@ namespace Scheduler
                 return false;
             }
         }
+
         public Instructiune()
         {
-            nrInstructiune = NrInstructiuni;
-            NrInstructiuni++;
         }
 
         public static bool EsteOperandulValoareImediata(string operatorCaString)
@@ -61,6 +56,7 @@ namespace Scheduler
                 return false;
             }
         }
+
         public static bool EsteOperandulCuOffsetRegistrii(string operatorCaString)
         {
             string operatorFaraSpatii = operatorCaString.Trim();
@@ -71,6 +67,7 @@ namespace Scheduler
 
             return false;
         }
+
         public static bool EsteDependintaRAW(Instructiune i1, Instructiune i2)
         {
             if (EsteEticheta(i1) || EsteEticheta(i2))
@@ -82,7 +79,6 @@ namespace Scheduler
             {
                 return false;
             }
-
             string operandScrisI1 = i1.Operanzi[0].ToLower();
 
             bool suntRegistriiFaraOffset = true;
@@ -118,7 +114,7 @@ namespace Scheduler
                         {
                             return true;
                         }
-                        if (operanziDinOffset.Count() > 1)
+                        if (operanziDinOffset.Length > 1)
                         {
                             if (operanziDinOffset[1].Equals(operandScrisI1))
                             {
@@ -149,7 +145,6 @@ namespace Scheduler
             return false;
         }
 
-
         public static bool EsteDirectivaASCII(Instructiune i1)
         {
             if (i1.Nume.Contains(SimbolASCII))
@@ -161,6 +156,7 @@ namespace Scheduler
                 return false;
             }
         }
+
         public static bool EsteRegistruCuOffset(string operand)
         {
             if (operand.Contains(')') || operand.Contains('('))
@@ -172,6 +168,7 @@ namespace Scheduler
                 return false;
             }
         }
+
         public static void Afiseaza(Instructiune i1)
         {
             string stringDeAfisat = i1.Nume + " ";
