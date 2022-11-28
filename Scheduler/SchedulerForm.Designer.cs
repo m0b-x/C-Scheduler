@@ -37,11 +37,14 @@
             this.buttonIncarcaFisier = new System.Windows.Forms.Button();
             this.labelFisierIncarcat = new System.Windows.Forms.Label();
             this.buttonRepornesteAplicatia = new System.Windows.Forms.Button();
+            this.buttonScrieFisier = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // richBoxCodInitial
             // 
-            this.richBoxCodInitial.Location = new System.Drawing.Point(12, 38);
+            this.richBoxCodInitial.Location = new System.Drawing.Point(12, 66);
             this.richBoxCodInitial.Name = "richBoxCodInitial";
             this.richBoxCodInitial.ReadOnly = true;
             this.richBoxCodInitial.Size = new System.Drawing.Size(344, 492);
@@ -50,7 +53,7 @@
             // 
             // richBoxCodFinal
             // 
-            this.richBoxCodFinal.Location = new System.Drawing.Point(617, 38);
+            this.richBoxCodFinal.Location = new System.Drawing.Point(617, 66);
             this.richBoxCodFinal.Name = "richBoxCodFinal";
             this.richBoxCodFinal.ReadOnly = true;
             this.richBoxCodFinal.Size = new System.Drawing.Size(344, 492);
@@ -60,7 +63,7 @@
             // labelScrisInitial
             // 
             this.labelScrisInitial.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelScrisInitial.Location = new System.Drawing.Point(444, 38);
+            this.labelScrisInitial.Location = new System.Drawing.Point(444, 66);
             this.labelScrisInitial.Name = "labelScrisInitial";
             this.labelScrisInitial.Size = new System.Drawing.Size(111, 47);
             this.labelScrisInitial.TabIndex = 2;
@@ -70,7 +73,7 @@
             // 
             this.labelMovMerging.BackColor = System.Drawing.Color.Red;
             this.labelMovMerging.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelMovMerging.Location = new System.Drawing.Point(444, 101);
+            this.labelMovMerging.Location = new System.Drawing.Point(444, 129);
             this.labelMovMerging.Name = "labelMovMerging";
             this.labelMovMerging.Size = new System.Drawing.Size(111, 48);
             this.labelMovMerging.TabIndex = 3;
@@ -81,7 +84,7 @@
             // 
             this.labelImmediateMerging.BackColor = System.Drawing.Color.Red;
             this.labelImmediateMerging.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelImmediateMerging.Location = new System.Drawing.Point(440, 179);
+            this.labelImmediateMerging.Location = new System.Drawing.Point(440, 207);
             this.labelImmediateMerging.Name = "labelImmediateMerging";
             this.labelImmediateMerging.Size = new System.Drawing.Size(115, 48);
             this.labelImmediateMerging.TabIndex = 4;
@@ -92,7 +95,7 @@
             // 
             this.labelMovReabsorbtion.BackColor = System.Drawing.Color.Red;
             this.labelMovReabsorbtion.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelMovReabsorbtion.Location = new System.Drawing.Point(440, 258);
+            this.labelMovReabsorbtion.Location = new System.Drawing.Point(440, 286);
             this.labelMovReabsorbtion.Name = "labelMovReabsorbtion";
             this.labelMovReabsorbtion.Size = new System.Drawing.Size(115, 48);
             this.labelMovReabsorbtion.TabIndex = 5;
@@ -101,7 +104,7 @@
             // 
             // buttonIncarcaFisier
             // 
-            this.buttonIncarcaFisier.Location = new System.Drawing.Point(12, 553);
+            this.buttonIncarcaFisier.Location = new System.Drawing.Point(12, 581);
             this.buttonIncarcaFisier.Name = "buttonIncarcaFisier";
             this.buttonIncarcaFisier.Size = new System.Drawing.Size(110, 42);
             this.buttonIncarcaFisier.TabIndex = 7;
@@ -114,7 +117,7 @@
             this.labelFisierIncarcat.AutoSize = true;
             this.labelFisierIncarcat.BackColor = System.Drawing.Color.Red;
             this.labelFisierIncarcat.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.labelFisierIncarcat.Location = new System.Drawing.Point(145, 562);
+            this.labelFisierIncarcat.Location = new System.Drawing.Point(145, 590);
             this.labelFisierIncarcat.Name = "labelFisierIncarcat";
             this.labelFisierIncarcat.Size = new System.Drawing.Size(189, 21);
             this.labelFisierIncarcat.TabIndex = 8;
@@ -122,7 +125,7 @@
             // 
             // buttonRepornesteAplicatia
             // 
-            this.buttonRepornesteAplicatia.Location = new System.Drawing.Point(429, 553);
+            this.buttonRepornesteAplicatia.Location = new System.Drawing.Point(429, 581);
             this.buttonRepornesteAplicatia.Name = "buttonRepornesteAplicatia";
             this.buttonRepornesteAplicatia.Size = new System.Drawing.Size(126, 34);
             this.buttonRepornesteAplicatia.TabIndex = 9;
@@ -130,11 +133,43 @@
             this.buttonRepornesteAplicatia.UseVisualStyleBackColor = true;
             this.buttonRepornesteAplicatia.Click += new System.EventHandler(this.buttonRepornesteAplicatia_Click);
             // 
+            // buttonScrieFisier
+            // 
+            this.buttonScrieFisier.Enabled = false;
+            this.buttonScrieFisier.Location = new System.Drawing.Point(851, 577);
+            this.buttonScrieFisier.Name = "buttonScrieFisier";
+            this.buttonScrieFisier.Size = new System.Drawing.Size(110, 42);
+            this.buttonScrieFisier.TabIndex = 10;
+            this.buttonScrieFisier.Text = "Scrie Fisier";
+            this.buttonScrieFisier.UseVisualStyleBackColor = true;
+            this.buttonScrieFisier.Click += new System.EventHandler(this.buttonScrieFisier_Click);
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(103, 19);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(133, 31);
+            this.label1.TabIndex = 11;
+            this.label1.Text = "Text Initial:";
+            // 
+            // label2
+            // 
+            this.label2.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label2.Location = new System.Drawing.Point(743, 19);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(133, 31);
+            this.label2.TabIndex = 12;
+            this.label2.Text = "Text Final:";
+            // 
             // SchedulerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(991, 597);
+            this.ClientSize = new System.Drawing.Size(991, 637);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.buttonScrieFisier);
             this.Controls.Add(this.buttonRepornesteAplicatia);
             this.Controls.Add(this.labelFisierIncarcat);
             this.Controls.Add(this.buttonIncarcaFisier);
@@ -145,7 +180,7 @@
             this.Controls.Add(this.richBoxCodFinal);
             this.Controls.Add(this.richBoxCodInitial);
             this.Name = "SchedulerForm";
-            this.Text = "Scheduler";
+            this.Text = "xx";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -163,5 +198,8 @@
         private Button buttonIncarcaFisier;
         private Label labelFisierIncarcat;
         private Button buttonRepornesteAplicatia;
+        private Button buttonScrieFisier;
+        private Label label1;
+        private Label label2;
     }
 }

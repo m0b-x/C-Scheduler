@@ -1,4 +1,6 @@
 using System.Diagnostics;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Scheduler
 {
@@ -9,6 +11,10 @@ namespace Scheduler
         private const string LinieNouaRichText = @"\line";
         private const string InceputBoldRichText = @"\b";
         private const string SfarsitBoldRichText = @"\b0";
+        private static string FilePath;
+        private static string FileName;
+        private static string FileNameWithoutPath;
+
         private const int IndexAllFiles = 4;
         private Scheduler scheduler = new();
         private Color culoareLabelActivat = System.Drawing.Color.Green;
@@ -22,7 +28,6 @@ namespace Scheduler
         private string continutFisierRaw;
         private string[] separatori = new string[] { "\n", "\r\n" };
         private string[] fileContent;
-        private string filePath;
 
         private List<Instructiune> instructiuni = new();
 
@@ -84,6 +89,12 @@ namespace Scheduler
 
         private void buttonLoadFile_Click(object sender, EventArgs e)
         {
+            //TODO:salveaza fisier modificat
+
+            //puncte esentiale:tema
+            //TODO:rezultate obtinute cu simulatorul
+            //ss-uri
+            //simulare cu rez mai bune
             using (OpenFileDialog openFileDialog = new())
             {
                 openFileDialog.InitialDirectory = "c:\\";
@@ -93,12 +104,14 @@ namespace Scheduler
 
                 if (openFileDialog.ShowDialog() == DialogResult.OK)
                 {
-                    filePath = openFileDialog.FileName;
+                    FilePath = openFileDialog.FileName;
+                    FileName = Path.GetFileName(openFileDialog.FileName);
                     Stream fileStream = openFileDialog.OpenFile();
 
                     using (StreamReader reader = new(fileStream))
                     {
                         continutFisierRaw = reader.ReadToEnd();
+
                         richBoxCodInitial.Text = continutFisierRaw;
 
                         continutFisierRaw = ParserInstructiuni.StergeComentarile(continutFisierRaw);
@@ -110,7 +123,6 @@ namespace Scheduler
                         parserInstructiuni.ParseazaInstructiuni(fileContent);
                         int index = 0;
                         List<Instructiune> instructiuniNoi = new();
-
 
                         while (index < parserInstructiuni.Instructiuni.Count() - 1)
                         {
@@ -227,7 +239,7 @@ namespace Scheduler
                             index++;
                         }
                         AdaugaInstructiuniNoiInTextBox(instructiuniNoi);
-
+                        buttonScrieFisier.Enabled = true;
                     }
                 }
             }
@@ -277,5 +289,28 @@ namespace Scheduler
         {
             Application.Restart();
         }
-    }
+
+        private void buttonScrieFisier_Click(object sender, EventArgs e)
+        {
+            System.Windows.Forms.SaveFileDialog saveFileDialog1;
+            saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
+
+            saveFileDialog1.InitialDirectory = "c:\\";
+            saveFileDialog1.Filter = "Text Files (*.txt)|*.txt|Trace Files (*.trc)|*.trc|Ins Files (*.ins)|*.ins|All Files (*.*)|*.*";
+            saveFileDialog1.FilterIndex = IndexAllFiles;
+            saveFileDialog1.RestoreDirectory = true;
+            saveFileDialog1.FileName = FileName;
+
+            DialogResult dr = saveFileDialog1.ShowDialog();
+
+            if (dr == DialogResult.OK)
+            {
+                string newFileName = saveFileDialog1.FileName;
+                string stringFisier = richBoxCodFinal.Text;
+
+                File.WriteAllText(newFileName, stringFisier);
+                MessageBox.Show($"Fisierul {newFileName} a fost salvat");
+            }
+        }
+        }
 }
