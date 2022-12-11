@@ -37,7 +37,9 @@ namespace Scheduler
                 case "addc":
                     {
                         double result;
-                        result = int.Parse(i1.Operanzi[2].Substring(1)) + int.Parse(i2.Operanzi[2].Substring(1));
+                        int termen1 = int.Parse(i1.Operanzi[2].Substring(1));
+                        int termen2 = int.Parse(i2.Operanzi[2].Substring(1));
+                        result = termen2 + termen1;
                         i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
                         break;
                     }
@@ -46,21 +48,27 @@ namespace Scheduler
                 case "subc":
                     {
                         double result;
-                        result = int.Parse(i1.Operanzi[2].Substring(1)) - int.Parse(i2.Operanzi[2].Substring(1));
+                        int termen1 = int.Parse(i1.Operanzi[2].Substring(1));
+                        int termen2 = int.Parse(i2.Operanzi[2].Substring(1));
+                        result = termen2 - termen1;
                         i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
                         break;
                     }
                 case "mult":
                     {
                         double result;
-                        result = int.Parse(i1.Operanzi[2].Substring(1)) * int.Parse(i2.Operanzi[2].Substring(1));
+                        int termen1 = int.Parse(i1.Operanzi[2].Substring(1));
+                        int termen2 = int.Parse(i2.Operanzi[2].Substring(1));
+                        result = termen2 * termen1;
                         i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
                         break;
                     }
                 case "div":
                     {
                         double result;
-                        result = int.Parse(i1.Operanzi[2].Substring(1)) / int.Parse(i2.Operanzi[2].Substring(1));
+                        int termen1 = int.Parse(i1.Operanzi[2].Substring(1));
+                        int termen2 = int.Parse(i2.Operanzi[2].Substring(1));
+                        result = termen2 / termen1;
                         i2.Operanzi[2] = Instructiune.SimbolValoareImediata + result.ToString();
                         break;
                     }
@@ -95,62 +103,25 @@ namespace Scheduler
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
-                        int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
-                        int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
-                        string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
-                        StringBuilder operatorBinar = new(dimensiuneMare);
 
-                        for (int i = 0; i < dimensiuneMica; i++)
-                        {
-                            string newBit = (op1Binar[i] & op2Binar[i]).ToString();
-                            operatorBinar[i] = newBit[0];
-                        }
-                        for (int i = dimensiuneMica - 1; i < dimensiuneMare; i++)
-                        {
-                            operatorBinar[i] = opBinarMaiMare[i];
-                        }
-                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + (Convert.ToInt32(op1Binar,2)& Convert.ToInt32(op2Binar, 2)).ToString();
                         break;
                     }
                 case "or":
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
-                        int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
-                        int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
-                        string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
-                        StringBuilder operatorBinar = new(dimensiuneMare);
 
-                        for (int i = 0; i < dimensiuneMica; i++)
-                        {
-                            string newBit = (op1Binar[i] | op2Binar[i]).ToString();
-                            operatorBinar[i] = newBit[0];
-                        }
-                        for (int i = dimensiuneMica - 1; i < dimensiuneMare; i++)
-                        {
-                            operatorBinar[i] = opBinarMaiMare[i];
-                        }
-                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + (Convert.ToInt32(op1Binar, 2) | Convert.ToInt32(op2Binar, 2)).ToString();
+
                         break;
                     }
                 case "eor":
                     {
                         string op1Binar = Convert.ToString(int.Parse(i1.Operanzi[2].Substring(1)), 2);
                         string op2Binar = Convert.ToString(int.Parse(i2.Operanzi[2].Substring(1)), 2);
-                        int dimensiuneMica = (op1Binar.Length >= op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
-                        int dimensiuneMare = (op1Binar.Length < op2Binar.Length) ? op2Binar.Length : op1Binar.Length;
-                        string opBinarMaiMare = (op1Binar.Length.Equals(dimensiuneMare)) ? op1Binar : op2Binar;
-                        StringBuilder operatorBinar = new(dimensiuneMare);
 
-                        for (int i = 0; i < dimensiuneMica; i++)
-                        {
-                            operatorBinar[i] = (op1Binar[i].Equals(op2Binar[i])) ? '1' : '0';
-                        }
-                        for (int i = dimensiuneMica - 1; i < dimensiuneMare; i++)
-                        {
-                            operatorBinar[i] = opBinarMaiMare[i];
-                        }
-                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + operatorBinar.ToString();
+                        i2.Operanzi[2] = Instructiune.SimbolValoareImediata + (Convert.ToInt32(op1Binar, 2) ^ Convert.ToInt32(op2Binar, 2)).ToString();
                         break;
                     }
             }

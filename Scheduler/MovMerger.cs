@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 
 namespace Scheduler
 {
@@ -16,18 +17,21 @@ namespace Scheduler
                 //BT B1, label /* instrucţiunea care se infiltrează */
                 //BRA label
 
-                //TODO:NU AI FACUTB
                 if (i2.Nume.ToLower().Equals("bt"))
                 {
-                    if (i1.Operanzi[2].Equals(i1.Operanzi[3]))
+                    if (i1.Operanzi[1].Equals(i1.Operanzi[2]))
                     {
-                        string label = i2.Operanzi[1];
-                        List<string> operanzi = new(1);
                         Instructiune iNoua = new()
                         {
                             Nume = "Bra",
-                            Operanzi = operanzi
+                            Operanzi = new(1) { i2.Operanzi[1] }
                         };
+                        Debug.WriteLine(i2.Operanzi.Count);
+
+                        i1.Nume = "";
+                        i1.Operanzi.Clear();
+
+
                         i2 = iNoua;
                         seSuprascrieOInstructiune = true;
                         return seSuprascrieOInstructiune;
@@ -38,18 +42,19 @@ namespace Scheduler
                 //=>EQ B3, R0, R0; ADD R10, R11, R12
                 else
                 {
-                    string[] operanziDinNume = i2.Nume.Split();
+                    //AICI
+                    string[] operanziINoua = i2.Operanzi.Skip(2).ToArray();
                     List<string> operanziNoi = new();
-                    operanziNoi.AddRange(operanziDinNume);
-                    operanziNoi.RemoveAt(0);
+                    operanziNoi.AddRange(operanziINoua);
                     operanziNoi.AddRange(i2.Operanzi);
 
                     Instructiune iNoua = new()
                     {
-                        Nume = operanziNoi[0]
+                        Nume = i2.Operanzi[0].Split()[0]
                     };
                     operanziNoi.RemoveAt(0);
                     iNoua.Operanzi = operanziNoi;
+                    iNoua.Operanzi[0] = iNoua.Operanzi[0].Split()[1];
                     i2 = iNoua;
                     return seSuprascrieOInstructiune;
                 }
@@ -129,8 +134,10 @@ namespace Scheduler
                                 //=>MOV R6, #4; MOV R3, #9
                                 if (Instructiune.EsteOperandulValoareImediata(i2.Operanzi[2]))
                                 {
-                                    int suma = int.Parse(i1.Operanzi[1].Remove(0, 1) + int.Parse(i2.Operanzi[2].Remove(0, 1)));
+                                    int termen1 = int.Parse(i1.Operanzi[1].Remove(0, 1));
+                                    int termen2 = int.Parse(i2.Operanzi[2].Remove(0, 1));
 
+                                    int suma = termen1+ termen2;
                                     string operandDestinatie = i2.Operanzi[0];
 
                                     List<string> operanziNoi = new();
@@ -150,8 +157,9 @@ namespace Scheduler
                                 //=>MOV R6, #4; MOV R3, #9
                                 else if (Instructiune.EsteOperandulValoareImediata(i2.Operanzi[1]))
                                 {
-                                    int suma = int.Parse(i1.Operanzi[1].Remove(0, 1) + int.Parse(i2.Operanzi[1].Remove(0, 1)));
-
+                                    int termen1 = int.Parse(i1.Operanzi[1].Remove(0, 1));
+                                    int termen2 = int.Parse(i2.Operanzi[2].Remove(0, 1));
+                                    int suma = termen1 + termen2;
                                     string operandDestinatie = i2.Operanzi[0];
 
                                     List<string> operanziNoi = new(2);
@@ -273,6 +281,7 @@ namespace Scheduler
                     //=>MOV B1, B2; BT B2, label
                     case "bt":
                         {
+                            Debug.WriteLine("DA");
                             i2.Operanzi[1] = i1.Operanzi[1];
                             return seSuprascrieOInstructiune;
                         }

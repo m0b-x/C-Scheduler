@@ -142,6 +142,9 @@ namespace Scheduler
             {
                 return true;
             }
+            if (i1.Operanzi[0].ToLower().Equals(i2.Operanzi[0].ToLower()))
+                return true;
+
             return false;
         }
 

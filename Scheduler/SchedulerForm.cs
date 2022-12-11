@@ -122,14 +122,16 @@ namespace Scheduler
 
                         parserInstructiuni.ParseazaInstructiuni(fileContent);
                         int index = 0;
+                        bool ultimulElementRAW = false;
                         List<Instructiune> instructiuniNoi = new();
 
-                        while (index < parserInstructiuni.Instructiuni.Count() - 1)
+                        while (index < parserInstructiuni.Instructiuni.Count() -1)
                         {
                             if (Instructiune.EsteEticheta(parserInstructiuni.Instructiuni[index]) ||
                                 Instructiune.EsteDirectivaASCII(parserInstructiuni.Instructiuni[index]))
                             {
                                 instructiuniNoi.Add(parserInstructiuni.Instructiuni[index]);
+                                index++;
                             }
                             else if (Instructiune.EsteDependintaRAW(parserInstructiuni.Instructiuni[index], parserInstructiuni.Instructiuni[index + 1]))
                             {
@@ -163,8 +165,8 @@ namespace Scheduler
 
                                     instructiuniNoi.Add(instrSfComentariu);
 
-
-                                    index += 2;
+                                    index+=2;
+                                    ultimulElementRAW = true;
                                 }
                                 else
                                     if (seCereImmediateMerging &&
@@ -196,7 +198,8 @@ namespace Scheduler
                                     Instructiune instrSfComentariu = new Instructiune() { Nume = "\\* sfarsit Merge.*\\ \n" };
 
                                     instructiuniNoi.Add(instrSfComentariu);
-                                    index+= 2;
+                                    index += 2;
+                                    ultimulElementRAW = true;
                                 }
                                 else
                                     if (seCereMovReabsorbtion &&
@@ -230,13 +233,25 @@ namespace Scheduler
                                     Debug.WriteLine("");
                                     */
                                     index += 2;
+                                    ultimulElementRAW = true;
+                                }
+                                else
+                                {
+                                    instructiuniNoi.Add(parserInstructiuni.Instructiuni[index]);
+                                    index++;
+                                    ultimulElementRAW = false;
                                 }
                             }
                             else
                             {
                                 instructiuniNoi.Add(parserInstructiuni.Instructiuni[index]);
+                                index++;
+                                ultimulElementRAW = false;
                             }
-                            index++;
+                        }
+                        if (ultimulElementRAW == false)
+                        {
+                            instructiuniNoi.Add(parserInstructiuni.Instructiuni[index]);
                         }
                         AdaugaInstructiuniNoiInTextBox(instructiuniNoi);
                         buttonScrieFisier.Enabled = true;
